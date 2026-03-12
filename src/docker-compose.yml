@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: universiada_api_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: UniversiadaDb
+      POSTGRES_MULTIPLE_DATABASES: keycloak
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-dbs.sh:/docker-entrypoint-initdb.d/init-dbs.sh  # Скрипт инициализации
+
+  keycloak:                    
+    image: quay.io/keycloak/keycloak:21.0.2
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN : admin
+      KEYCLOAK_ADMIN_PASSWORD : 123
+      KC_DB: postgres
+      KC_DB_URL_HOST: universiada_api_db
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: 123
+      KC_DB_SCHEMA: public
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME: localhost
+      KC_PROXY: edge
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT: false
+
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    command: start-dev
+
+volumes:                       
+  postgres_data:

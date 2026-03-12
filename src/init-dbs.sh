@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+# Подключаемся к базе 'postgres' (административная база, всегда существует)
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname=postgres <<-EOSQL
+    CREATE DATABASE keycloak;
+    GRANT ALL PRIVILEGES ON DATABASE keycloak TO $POSTGRES_USER;
+EOSQL
