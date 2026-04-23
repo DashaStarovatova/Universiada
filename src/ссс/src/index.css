@@ -1,0 +1,237 @@
+@import "tailwindcss";
+
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: white;
+  min-height: 100vh;
+  color: #0b1220;
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+}
+
+
+.gradient-blob {
+  position: absolute;
+  transform: rotate(-15deg);
+  pointer-events: none;
+  border-radius: 95% 5% 87% 13% / 18% 89% 11% 82%;
+  filter: blur(42px);
+  opacity: 0.85;
+  background: radial-gradient(ellipse at 15% 25%, #7c57d9 0%, transparent 65%),
+              radial-gradient(circle at 90% 60%, #81f381 0%, transparent 55%),
+              radial-gradient(ellipse at 10% 95%, #8be9ba 0%, transparent 65%),
+              radial-gradient(circle at 80% 10%, #783baa 0%, transparent 50%);
+}
+
+.mesh-bg {
+  background:
+    radial-gradient(1200px 800px at 10% 10%, rgba(255, 106, 223, 0.10), transparent 60%),
+    radial-gradient(900px 700px at 80% 20%, rgba(34, 211, 238, 0.10), transparent 55%),
+    radial-gradient(900px 700px at 55% 60%, rgba(168, 85, 247, 0.10), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 45%, #ffffff 100%);
+}
+
+.glow-orb {
+  --orb-a: rgba(255, 106, 223, 0.55);
+  --orb-b: rgba(106, 139, 255, 0.45);
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, var(--orb-a) 0, transparent 60%),
+    radial-gradient(circle at 70% 65%, var(--orb-b) 0, transparent 62%);
+  filter: blur(44px);
+  opacity: 0.95;
+  animation: floaty 14s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0);
+  }
+}
+
+.neo-card {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.neo-outline {
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  box-shadow: 0 10px 28px rgba(255, 106, 223, 0.12);
+}
+
+.grad-text {
+  background: linear-gradient(90deg, #ff6adf 0%, #6a8bff 45%, #7cf6ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border-radius: 1.25rem;
+  box-shadow: 0 14px 26px rgba(16, 24, 40, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.25rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 1.1rem;
+  }
+}
+
+.icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  width: 2.25rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 106, 223, 0.08);
+  color: #ff6adf;
+}
+
+.section {
+  scroll-margin-top: 80px;
+}
+
+.gradient-border {
+  position: relative;
+  /* background: white; */
+  border-radius: 0.375rem;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 0.375rem;
+  background: linear-gradient(to right, #ff6adf, #6a8bff, #7cf6ff);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+
+/* .gradient-border_navig {
+  position: relative;
+  background: transparent;
+  border-radius: 0.375rem;
+} */
+
+/* .gradient-border_navig::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 0.375rem;
+  background: linear-gradient(to right, #ff6adf, #6a8bff, #7cf6ff);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.gradient-border_navig:hover::before {
+  opacity: 1;
+} */
+
+.gradient-border_navig {
+  position: relative;
+  background: transparent;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.gradient-border_navig:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
+}
+
+
+@keyframes marquee-vertical {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical 70s linear infinite;
+}
+
+@keyframes marquee-vertical-reverse {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-marquee-vertical-reverse {
+  animation: marquee-vertical-reverse 70s linear infinite;
+}
+
+.writing-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  display: inline-block;
+}
+.writing-vertical-rotated {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  display: inline-block;
+  transform: rotate(180deg);
+}
+
+/* Убирает outline при клике на график */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-tooltip-wrapper:focus {
+  outline: none;
+}
+
+/* Или более глобально для всех элементов Recharts */
+.recharts-wrapper *:focus {
+  outline: none;
+}

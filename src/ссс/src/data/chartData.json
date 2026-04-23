@@ -1,0 +1,19 @@
+{
+    "data": [
+      { "month": "Янв 24", "keyRate": 16, "inflation": 7.4, "target": 4 },
+      { "month": "Фев 24", "keyRate": 16, "inflation": 7.2, "target": 4 },
+      { "month": "Мар 24", "keyRate": 16, "inflation": 7.0, "target": 4 },
+      { "month": "Апр 24", "keyRate": 15, "inflation": 6.8, "target": 4 },
+      { "month": "Май 24", "keyRate": 15, "inflation": 6.5, "target": 4 },
+      { "month": "Июн 24", "keyRate": 15, "inflation": 6.2, "target": 4 },
+      { "month": "Июл 24", "keyRate": 14, "inflation": 5.8, "target": 4 },
+      { "month": "Авг 24", "keyRate": 14, "inflation": 5.5, "target": 4 },
+      { "month": "Сен 24", "keyRate": 14, "inflation": 5.2, "target": 4 },
+      { "month": "Окт 24", "keyRate": 13, "inflation": 4.9, "target": 4 },
+      { "month": "Ноя 24", "keyRate": 13, "inflation": 4.6, "target": 4 },
+      { "month": "Дек 24", "keyRate": 13, "inflation": 4.3, "target": 4 },
+      { "month": "Янв 25", "keyRate": 12, "inflation": 4.1, "target": 4 },
+      { "month": "Фев 25", "keyRate": 12, "inflation": 4.0, "target": 4 },
+      { "month": "Мар 25", "keyRate": 11, "inflation": 3.9, "target": 4 }
+    ]
+  }
