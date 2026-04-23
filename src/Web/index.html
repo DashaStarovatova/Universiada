@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 15% 25%, #7c57d9 0%, transparent 65%),
+                radial-gradient(circle at 90% 60%, #81f381 0%, transparent 55%),
+                radial-gradient(ellipse at 10% 95%, #8be9ba 0%, transparent 65%),
+                radial-gradient(circle at 80% 10%, #783baa 0%, transparent 50%);
+            position: relative;
+            overflow-x: hidden;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        }
+
+        /* Основной контейнер */
+        .card-grid {
+            display: grid;
+            /* Левая часть гибкая (1fr), правая подстраивается под текст (auto) */
+            grid-template-columns: auto auto;
+            grid-template-areas:
+                "tag     content"
+                "header  content"
+                "footer  content";
+            gap: 1.5rem 5rem;
+            align-items: center;
+            /* Центрирование по вертикали */
+            padding: 1rem;
+            color: #fff;
+        }
+
+        /* Назначение областей */
+        .card-tag {
+            grid-area: tag;
+            align-self: end;
+        }
+
+        .card-tag p {
+            margin: 0;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .card-header {
+            grid-area: header;
+        }
+
+        .card-header h1 {
+            margin: 0;
+            font-size: 3.2rem;
+            line-height: 1.1;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .card-footer {
+            grid-area: footer;
+            align-self: start;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        /* Правый блок контента */
+        .card-content {
+            grid-area: content;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            text-align: right;
+            padding: 2rem;
+            /* Линия-разделитель слева от контента */
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-content p {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Общая точка (dot) */
+        .card-dot {
+            display: inline-block;
+            width: 0.7em;
+            height: 0.7em;
+            border-radius: 50%;
+            margin-right: 0.5em;
+            vertical-align: middle;
+        }
+
+        .card-dot.purple {
+            background-color: #7c57d9;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 1024px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "tag"
+                    "header"
+                    "content"
+                    "footer";
+                gap: 2.5rem;
+            }
+
+            .card-content {
+                text-align: left;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+                padding: 2rem;
+            }
+
+            .card-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section id="challenge" class="card-grid">
+        <!-- Левая колонка (управляется через Grid Areas) -->
+        <div class="card-tag">
+            <p><span class="card-dot purple"></span> Экономическая универсиада - это</p>
+        </div>
+
+        <div class="card-header">
+            <h1>Всероссийская<br />олимпиада<br />для студентов<br />по ДКП</h1>
+        </div>
+
+        <div class="card-footer">
+            <p>Центральный банк РФ | МГУ им. Ломоносова</p>
+        </div>
+
+        <!-- Правая колонка -->
+        <div class="card-content">
+            <div class="content-item">
+                <p>Попробуй себя в роли Мегарегулятора</p>
+            </div>
+            <div class="content-item">
+                <p>Определяй размер ключевой ставки</p>
+            </div>
+            <div class="content-item">
+                <p>Оценивай последствия проводимой ДКП</p>
+            </div>
+            <div class="content-item">
+                <p>Удерживай инфляцию вблизи цели</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

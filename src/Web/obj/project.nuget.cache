@@ -1,10 +1,20 @@
 {
   "version": 2,
-  "dgSpecHash": "Ze9dgZzW4fw=",
+  "dgSpecHash": "wEiGtSe2zpc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Web\\Web.csproj",
+  "projectFilePath": "C:\\Users\\p.zyryanov\\repos\\Universiada\\src\\Web\\Web.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Darya\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.2\\microsoft.aspnetcore.app.internal.assets.10.0.2.nupkg.sha512"
+    "C:\\Users\\p.zyryanov\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.5\\microsoft.aspnetcore.app.internal.assets.10.0.5.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source http://registry.arman-engineering.ru:4437/v3/index.json.",
+      "projectPath": "C:\\Users\\p.zyryanov\\repos\\Universiada\\src\\Web\\Web.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\p.zyryanov\\repos\\Universiada\\src\\Web\\Web.csproj",
+      "targetGraphs": []
+    }
+  ]
 }
