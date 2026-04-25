@@ -1,0 +1,21 @@
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.nav-items {
+    display: flex;
+    gap: 2rem;
+}
+
+::deep .nav-link {
+    padding: 1rem;
+    display: inline-block;
+    text-decoration: none;
+    color: currentColor;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}

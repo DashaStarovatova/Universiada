@@ -1,43 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+
 body {
     margin: 0;
     min-height: 100vh;
-    background-color: #0b0f1a; /* Основной темный фон */
+    background:
+        radial-gradient(ellipse at 15% 25%, #7c57d9 0%, transparent 65%),
+        radial-gradient(circle at 90% 60%, #81f381 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 95%, #8be9ba 0%, transparent 65%),
+        radial-gradient(circle at 80% 10%, #783baa 0%, transparent 50%);
     position: relative;
-    overflow-x: hidden; /* Чтобы огромный шар не создавал горизонтальный скролл */
+    overflow-x: hidden;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-/* Создание градиентного пятна через псевдоэлемент */
-body::before {
-    content: "";
-    position: fixed; /* Фиксируем, чтобы при скролле пятно оставалось на месте */
-    
-    /* Позиционирование: центрирование по горизонтали и сдвиг вниз */
-    left: 50%;
-    bottom: -40%;
-    transform: translateX(-50%);
-    
-    /* Размеры для мобильных устройств (аналог h-30 w-30) */
-    width: 30rem;
-    height: 30rem;
-    
-    /* Эффект градиента и размытия */
-    background: radial-gradient(
-        circle, 
-        rgba(124, 58, 237, 0.5) 0%,   /* Цвет в центре (фиолетовый) */
-        rgba(124, 58, 237, 0) 70%     /* Прозрачность к краям */
-    );
-    filter: blur(80px); /* Мягкое размытие краев */
-    
-    /* Слой и взаимодействие */
-    z-index: -1; /* Пятно строго под контентом */
-    pointer-events: none; /* Пропускает клики сквозь себя */
+h1 {
+    text-transform: uppercase;
 }
 
-/* Адаптивность для больших экранов (аналог md: в Tailwind) */
-@media (min-width: 768px) {
-    body::before {
-        width: 110rem;  /* Огромный размер как в вашем примере */
-        height: 100rem;
-        filter: blur(120px); /* На больших размерах размытие можно усилить */
-    }
+
+p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+a {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: currentColor;
 }
