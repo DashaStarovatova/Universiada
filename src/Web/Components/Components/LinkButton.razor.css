@@ -1,0 +1,33 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 2rem;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+}
+
+.button.primary {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.button.secondary {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.button-dot
+{
+    display: inline-block;
+    width: 0.8rem;
+    height: 0.8rem;
+    clip-path: circle(50%);
+}
+
+.button-dot.primary {
+    background-color: #7c57d9;
+}

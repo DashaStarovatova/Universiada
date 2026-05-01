@@ -1,0 +1,27 @@
+<div class="button @CssType">
+    @if (Type is ButtonType.Primary)
+    {
+        <span class="button-dot primary" />
+    }
+    <a href="@Href" download="@Download">@ChildContent</a>
+</div>
+
+@code {
+    public enum ButtonType
+    {
+        Primary,
+        Secondary
+    }
+
+    [Parameter] public ButtonType Type { get; set; } = ButtonType.Primary;
+    [Parameter] public required RenderFragment ChildContent { get; set; }
+    [Parameter] public required string Href { get; set; }
+    [Parameter] public string? Download { get; set; }
+
+    public string CssType => Type switch
+    {
+        ButtonType.Primary => "primary",
+        ButtonType.Secondary => "secondary",
+        _ => "primary"
+    };
+}

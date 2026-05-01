@@ -4,6 +4,23 @@
 }
 
 .timeline-content {
-    display: grid;
-    grid-template-columns: repeat(5, auto);
+    display: flex;
+    text-align: center;
+    gap: 2rem;
+}
+
+.timeline-item {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timeline-date {
+    display: inline-flex;
+    background-color: white;
+    border-radius: 50%;
+    height: 4rem;
+    width: 4rem;
+    align-items: center;
+    justify-content: center;
 }
