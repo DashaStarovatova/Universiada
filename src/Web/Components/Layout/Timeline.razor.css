@@ -1,0 +1,9 @@
+.timeline-card {
+    margin: 4rem 2rem;
+    padding: 2rem
+}
+
+.timeline-content {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+}

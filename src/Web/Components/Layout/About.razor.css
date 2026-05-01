@@ -1,5 +1,5 @@
 .about-card {
-    padding: 1rem;
+    padding: 2rem;
     margin: 4rem 2rem;
 }
 
@@ -16,8 +16,7 @@
     display: inline-block;
     width: 0.7rem;
     height: 0.7rem;
-    border-radius: 0.7rem;
-    vertical-align: middle;
+    clip-path: circle(50%);
 }
 
 .about-dot.purple {

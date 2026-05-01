@@ -15,10 +15,14 @@ body {
     font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+header {
+    position: sticky;
+    top: 0
+}
+
 h1 {
     text-transform: uppercase;
 }
-
 
 p {
     margin: 0;

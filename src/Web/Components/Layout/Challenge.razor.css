@@ -1,0 +1,81 @@
+.challenge-card {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template: auto auto;
+    grid-template-areas:
+        "tag    content"
+        "header content"
+        "footer content";
+    gap: 1.5rem, 5rem;
+    align-items: center;
+    padding: 2rem;
+    margin: 4rem 2rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+}
+
+.challenge-tag {
+    grid-area: tag;
+    align-self: end;
+    align-items: baseline;
+}
+
+.challenge-tag p {
+    margin: 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    display: inline-block;
+}
+
+.challenge-triangle {
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    background-color: black;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.challenge-header {
+    grid-area: header;
+}
+
+.challenge-header h1 {
+    margin: 0;
+    font-size: 3.2rem;
+    line-height: 1.1;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.challenge-footer {
+    grid-area: footer;
+    align-self: start;
+    font-size: 1rem;
+    opacity: 0.7
+}
+
+.challenge-content {
+    grid-area: content;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    text-align: right;
+    padding: 2rem;
+}
+
+.challenge-content p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.content-item {
+    display: none;
+}
+
+.content-item.active {
+    display: block
+}
