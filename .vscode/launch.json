@@ -5,17 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": ".NET Core Launch (src/Web)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Console/bin/Debug/net10.0/Console.dll",
+            "preLaunchTask": "build Web",
+            "program": "${workspaceFolder}/src/Web/bin/Debug/net10.0/Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/src/Web",
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
         },
-            {
+        {
             "name": ".NET Core Launch (API)",
             "type": "coreclr",
             "request": "launch",
@@ -27,6 +30,7 @@
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
-            }}
-        ]
-    }
+            }
+        }
+    ]
+}

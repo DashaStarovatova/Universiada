@@ -61,7 +61,6 @@ main {
     .top-row {
         position: sticky;
         top: 0;
-        z-index: 1;
     }
 
     .top-row.auth ::deep a:first-child {
@@ -87,7 +86,6 @@ main {
     padding: 0.6rem 1.25rem 0.7rem 1.25rem;
     position: fixed;
     width: 100%;
-    z-index: 1000;
 }
 
     #blazor-error-ui .dismiss {
