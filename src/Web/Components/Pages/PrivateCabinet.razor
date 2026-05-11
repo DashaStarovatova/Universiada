@@ -1,0 +1,34 @@
+@page "/econ-cabinet"
+
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+<header>
+    <NavCabinet />
+</header>
+
+<main>
+    <SendForm />
+    <MonitoringChart ChartData="@realData" />
+</main>
+
+@code {
+    private List<MonitoringChart.DataPoint> realData = new()
+    {
+        new() { Period = "2023Q1", KeyRate = 7.5, Inflation = 4.2, Target = 4.0 },
+        new() { Period = "2023Q2", KeyRate = 7.4, Inflation = 3.9, Target = 4.0 },
+        new() { Period = "2023Q3", KeyRate = 7.2, Inflation = 3.4, Target = 4.0 },
+        new() { Period = "2023Q4", KeyRate = 7.1, Inflation = 3.9, Target = 4.0 },
+        new() { Period = "2024Q1", KeyRate = 7.0, Inflation = 4.5, Target = 4.0 },
+        new() { Period = "2024Q2", KeyRate = 7.4, Inflation = 3.9, Target = 4.0 },
+        new() { Period = "2024Q3", KeyRate = 7.2, Inflation = 3.4, Target = 4.0 },
+        new() { Period = "2024Q4", KeyRate = 7.1, Inflation = 3.9, Target = 4.0 },
+
+    };
+
+    private string teamName = "Test";
+
+}

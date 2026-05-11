@@ -1,0 +1,233 @@
+.form-card {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 10px 15px 16px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    margin: 6rem;
+    display: flex;
+}
+
+.left-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem 4rem;
+}
+
+.left-card p {
+    font-size: 1rem;
+}
+
+
+.right-card {
+    flex: 1;
+}
+
+.send-form {
+    border-radius: 1rem;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #7c57d9;
+    padding: 1rem;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: rgb(95, 95, 95);
+    margin-bottom: 1rem;
+}
+
+.divider {
+    display: block;
+    width: 100%;
+    height: 0;
+    border-top: 1px solid #ccc;
+    margin: 1rem 0;
+}
+
+.field-input:focus {
+    outline: none;
+}
+
+::deep .field-input {
+    width: 100%;
+    padding: 1.3rem 1rem;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.form-field {
+    border-radius: 1rem;
+    border: 2px solid #5db06f;
+    background: white;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-field:hover {
+    border-color: #7c57d9;
+    background: #f9f9f9;
+}
+
+.field-input {
+    width: 100%;
+    padding: 1.3rem 1rem;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.field-input {
+    cursor: pointer;
+}
+
+.custom-file-input {
+    display: block;
+    padding: 0.7rem 1rem;
+    border-radius: 1rem;
+    background: white;
+    font-size: 1rem;
+    font-family: inherit;
+    text-align: left;
+    color: rgb(95, 95, 95);
+    cursor: pointer;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.custom-file-input {
+    border-color: #7c57d9;
+    background: #f9f9f9;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+    background: #7c57d9;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+}
+
+.form-action {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+
+
+
+
+/* настраиваем адаптивность */
+@media (max-width: 1024px) {
+    .form-card {
+        flex-direction: column;
+        margin: 2rem;
+    }
+
+    .left-card {
+        padding-top: 0rem;
+        padding-bottom: 3rem;
+        padding-left: 0rem;
+        padding-right: 0rem;
+    }
+
+    .left-card p {
+        font-size: 0.8rem;
+    }
+
+    .title {
+        font-size: 0.8rem;
+    }
+
+    .subtitle {
+        font-size: 0.6rem;
+    }
+
+    .field-input {
+        font-size: 0.7rem;
+    }
+
+    .custom-file-input {
+        font-size: 0.7rem;
+    }
+
+    .form-card {
+        margin-top: 2rem;
+    }
+
+    .form-action {
+        justify-content: center;
+    }
+}
+
+
+
+@media (max-width: 460px) {
+    .form-card {
+        flex-direction: column;
+        margin: 2rem;
+    }
+
+    .left-card {
+        padding-top: 0rem;
+        padding-bottom: 3rem;
+        padding-left: 0rem;
+        padding-right: 0rem;
+    }
+
+    .left-card p {
+        font-size: 0.6rem;
+    }
+
+    .title {
+        font-size: 0.6rem;
+    }
+
+    .subtitle {
+        font-size: 0.5rem;
+    }
+
+    .field-input {
+        font-size: 0.5rem;
+    }
+
+    .custom-file-input {
+        font-size: 0.5rem;
+    }
+
+    .form-card {
+        margin-top: 1rem;
+    }
+
+    .form-action {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .custom-file-input::-webkit-file-upload-button {
+        display: block;
+        width: 100%;
+        margin: 0;
+        margin-bottom: 0.5rem;
+    }
+
+}

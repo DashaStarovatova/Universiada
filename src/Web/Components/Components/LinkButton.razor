@@ -1,16 +1,22 @@
 <div class="button @CssType">
+    <a href="@Href" download="@Download">@ChildContent</a>
     @if (Type is ButtonType.Primary)
     {
         <span class="button-dot primary" />
     }
-    <a href="@Href" download="@Download">@ChildContent</a>
+
+    @if (Type is ButtonType.Another)
+    {
+        <span class="button-dot another" />
+    }
 </div>
 
 @code {
     public enum ButtonType
     {
         Primary,
-        Secondary
+        Secondary,
+        Another
     }
 
     [Parameter] public ButtonType Type { get; set; } = ButtonType.Primary;
@@ -22,6 +28,8 @@
     {
         ButtonType.Primary => "primary",
         ButtonType.Secondary => "secondary",
-        _ => "primary"
+        ButtonType.Another => "another",
+        _ => "primary",
+        
     };
 }

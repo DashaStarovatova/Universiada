@@ -1,75 +1,135 @@
 .challenge-card {
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template: auto auto;
-    grid-template-areas:
-        "tag    content"
-        "header content"
-        "footer content";
-    gap: 1.5rem, 5rem;
-    align-items: center;
-    padding: 2rem;
-    margin: 4rem 2rem;
+    display: flex;
+    /* flex-wrap: wrap; */
+    gap: 3rem;
+    margin-left: 6rem;
+    margin-right: 6rem;
+    margin-top: 6rem;
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
+    box-shadow: 10px 15px 16px rgba(0, 0, 0, 0.3);
+    flex-direction: row;
+}
+
+/* Левая колонка (объединяем tag, header, footer) */
+.challenge-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 6rem;
+}
+
+/* Правая колонка (content) */
+.challenge-content {
+    flex: 1;
 }
 
 .challenge-tag {
     grid-area: tag;
     align-self: end;
     align-items: baseline;
+    text-align: left;
+    margin-right: 50px;
+    margin-top: 0px;
+    align-self: flex-start;
 }
 
 .challenge-tag p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
     background: rgba(255, 255, 255, 0.15);
     display: inline-block;
+    letter-spacing: 2px;
 }
 
 .challenge-triangle {
     display: inline-block;
     width: 0.7rem;
     height: 0.7rem;
-    background-color: black;
     clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
+.challenge-triangle:nth-child(1) {
+    background-color: #7c57d9
+}
+
+.challenge-triangle:nth-child(2) {
+    background: linear-gradient(100deg,
+            rgba(124, 87, 217, 0.6) 50%,
+            rgba(129, 243, 129, 0.5) 100%);
+}
+
+.challenge-triangle:nth-child(3) {
+    background-color: #81f381;
+}
+
 .challenge-header {
-    grid-area: header;
+    align-self: flex-start;
 }
 
 .challenge-header h1 {
     margin: 0;
-    font-size: 3.2rem;
+    font-size: 2.5rem;
     line-height: 1.1;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .challenge-footer {
-    grid-area: footer;
-    align-self: start;
-    font-size: 1rem;
-    opacity: 0.7
+    align-self: flex-start;
+    opacity: 0.7;
+    /* margin-top: 40px; */
+    text-transform: uppercase;
+}
+
+.challenge-footer p {
+    font-size: 0.5rem;
 }
 
 .challenge-content {
-    grid-area: content;
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     gap: 1.2rem;
-    text-align: right;
-    padding: 2rem;
+    text-align: center;
+    padding: 1rem;
+    background: url(images/blob.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: content-box;
+    /* background-size: contain; */
+}
+
+.content-header h1 {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: white;
+}
+
+.content-header h2 {
+    margin-top: -1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+
 }
 
 .challenge-content p {
     margin: 0;
-    font-size: 1.2rem;
+    padding-left: 1rem;
+    padding-right: 0rem;
+    font-size: 1.4rem;
     font-weight: 500;
-    line-height: 1.4;
+    color: white;
+    text-transform: uppercase;
+    width: 300px;
+    align-content: center;
 }
 
 .content-item {
@@ -79,3 +139,239 @@
 .content-item.active {
     display: block
 }
+
+.marker-gradient {
+    background: linear-gradient(100deg,
+            rgba(124, 87, 217, 0.2) 0%,
+            rgba(124, 87, 217, 0.902) 30%,
+            rgba(129, 243, 129, 0.9) 70%,
+            rgba(129, 243, 129, 0.2) 100%);
+    padding: 0 4px;
+    background-size: 100% 40%;
+    background-repeat: no-repeat;
+    background-position: 0 85%;
+}
+
+
+
+
+/* Контейнер с кнопками и индикаторами */
+.content-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Круглые кнопки */
+.nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-color: #f7f0f0ce;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #7c57d9e6;
+}
+
+.nav-button:hover {
+    background-color: #f7f0f0f1;
+    transform: scale(1.05);
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+}
+
+/* Индикаторы */
+.indicators {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #f7f0f0ce;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.indicator.active {
+    width: 28px;
+    background-color: #f7f0f0ce;
+    border-radius: 4px;
+}
+
+/* Эффект при наведении на индикатор */
+.indicator:hover {
+    background-color: #f7f0f0f1;
+    transform: scale(1.2);
+}
+
+.content-item {
+    display: none;
+    animation: fade 0.3s ease;
+}
+
+.content-item.active {
+    display: block;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+
+
+
+
+/* настраиваем адаптивность */
+@media (max-width: 1439px) {
+
+
+    .challenge-header h1 {
+        font-size: 1.7rem;
+    }
+
+    .content-header h1 {
+        font-size: 0.6rem;
+    }
+
+    .content-header h2 {
+        font-size: 1rem;
+    }
+
+    .indicator {
+        width: 6px;
+        height: 6px;
+    }
+
+    .nav-button {
+        width: 32px;
+        height: 32px;
+    }
+
+    .challenge-content p {
+        font-size: 1.2rem;
+        width: 300px;
+        width: 300px;
+        height: 70px;
+    }
+}
+
+
+@media (max-width: 1024px) {
+    .challenge-left {
+        padding: 3rem;
+    }
+
+    .challenge-left {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+
+    .challenge-tag {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        gap: 0.2rem
+    }
+
+    .challenge-card {
+        margin: 4rem 2rem;
+    }
+
+    .challenge-tag p {
+        font-size: 0.6rem;
+        margin-left: 0.2rem;
+    }
+
+    .challenge-header h1 {
+        font-size: 2rem;
+    }
+
+    .challenge-footer p {
+        font-size: 0.5rem;
+    }
+
+    .content-header h1 {
+        font-size: 0.5rem;
+    }
+
+    .content-header h2 {
+        font-size: 0.8rem;
+    }
+
+    .challenge-content p {
+        font-size: 1rem;
+        width: 200px;
+        width: 200px;
+        height: 60px;
+    }
+
+    .content-actions {
+        margin-top: 0rem;
+    }
+
+    .indicator {
+        width: 6px;
+        height: 6px;
+    }
+
+    .nav-button {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .challenge-card {
+
+        margin-left: 2rem;
+        margin-right: 2rem;
+        margin-top: 6rem;
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+
+    .content-header h1 {
+        padding-top: 4rem;
+        margin-left: 1rem;
+    }
+    .content-header h2 {
+        margin-left: 1rem;
+    }
+
+    .content-actions {
+        padding-bottom: 4rem;
+    }
+
+
+    .challenge-left {
+        padding: 4rem;
+        padding-bottom: 0;
+    }
+
+
+}
+
+@media (max-width: 460px) {}

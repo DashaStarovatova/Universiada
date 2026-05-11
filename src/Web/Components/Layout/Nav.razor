@@ -1,7 +1,7 @@
 <nav class="nav">
     <div class="nav-items">
         <div class="nav-item">
-            <NavLink href="#about" class="nav-link nav-link-active">Об олимпиаде</NavLink>
+            <NavLink href="#challenge" class="nav-link nav-link-active">Об олимпиаде</NavLink>
         </div>
         <div class="nav-item">
             <NavLink href="#timeline" class="nav-link">Этапы</NavLink>
@@ -15,7 +15,19 @@
     </div>
     <div class="nav-login">
         <div class="naw-item">
-            <NavLink href="#" class="nav-link">Войти</NavLink>
+            <NavLink href="/econ-cabinet" class="nav-link">Войти</NavLink>
         </div>
     </div>
 </nav>
+
+<script>
+    window.addEventListener('scroll', function () {
+        const nav = document.querySelector('.nav');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        }
+        else {
+            nav.classList.remove('scrolled');
+        }
+    })
+</script>

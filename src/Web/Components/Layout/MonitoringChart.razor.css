@@ -1,0 +1,140 @@
+.chart-card {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 10px 15px 16px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    margin: 6rem;
+}
+
+.chart-title {
+    text-align: center;
+    font-size: 1.7rem;
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
+}
+
+.chart-layout {
+    display: flex;
+    align-items: stretch;
+}
+
+.chart-left {
+    flex: 2;
+}
+
+.chart-left h3 {
+    font-size: 1.5rem;
+
+}
+
+.chart-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.metric {
+    text-align: center;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 1rem;
+}
+
+.metric-value {
+    font-size: 3.0rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.metric-label {
+    font-size: 1rem;
+    color: rgba(0, 0, 0);
+}
+
+.chart-left h1 {
+    margin-bottom: 2rem;
+    font-size: 2.0rem;
+    line-height: 1.1;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+
+@media (max-width: 1024px) {
+    .chart-card {
+        margin: 2rem;
+    }
+
+    .chart-left {
+        min-height: 300px;
+    }
+
+    .chart-layout {
+        flex-direction: column;
+    }
+
+    .chart-right {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .metric {
+        flex: 1;
+    }
+
+    .metric-label {
+        font-size: 0.8rem;
+    }
+
+    .metric-value {
+        font-size: 2.0rem;
+    }
+
+
+    .chart-title {
+        font-size: 1rem;
+    }
+
+}
+
+@media (max-width: 460px) {
+    .chart-card {
+        margin: 2rem;
+    }
+
+    .chart-left {
+        min-height: 200px;
+    }
+
+    .chart-layout {
+        flex-direction: column;
+    }
+
+    .chart-right {
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .metric {
+        flex: 1;
+        padding: 0.5rem;
+    }
+
+    .metric-label {
+        font-size: 0.5rem;
+
+    }
+
+    .metric-value {
+        font-size: 1.0rem;
+
+    }
+
+    .chart-title {
+        font-size: 0.5rem;
+    }
+}

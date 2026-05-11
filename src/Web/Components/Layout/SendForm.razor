@@ -1,0 +1,101 @@
+@inject IJSRuntime JS
+@using MediatR
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO
+@using System.Security.Claims
+@using Web.Components.Components
+
+@rendermode InteractiveServer
+
+<div class="form-card">
+
+    <div class="left-card">
+        <p>Отправка доступна с 9:00 до 18:00 МСК согласно календарю олимпиады.</p>
+        <span class="divider"></span>
+        <p>Новые данные появятся после расчета влияния вашей ставки на экономику.</p>
+        <span class="divider"></span>
+        <p>Если вы не отправите ставку в указанный период, то будет использовано ваше предыдущее решение.</p>
+    </div>
+
+    <EditForm class="right-card" Model="@Model" OnSubmit="@SendKeyRate">
+        <div class="send-form">
+            <p class="title">Отправить решение по ставке</p>
+            <p class="subtitle">Введите предлагаемое значение ключевой ставки (в %)</p>
+
+            <div class="form-field">
+                <InputNumber type="text" class="field-input" placeholder="Например: 7.25"
+                             @bind-Value="@Model.KeyRate" />
+            </div>
+
+            <span class="divider"></span>
+
+            <p class="title">Загрузить обзор ДКП / Методологию</p>
+            <p class="subtitle">Загрузка файлов доступна согласно календарю</p>
+
+            <div class="form-field">
+                <input type="file" id="fileInput" class="custom-file-input" @onchange="HandleFileSelected" />
+            </div>
+        </div>
+
+        
+        <div class="form-action">
+            <LinkButton Type=LinkButton.ButtonType.Another Href="">
+                Скачать данные
+            </LinkButton>
+            <button type="submit">Отправить</button>
+        </div>
+
+    </EditForm>
+</div>
+
+
+@code {
+    [Inject] public IMediator Mediator { get; set; }
+    [Inject] public IIdentityService IdentityService { get; set; }
+
+    public Guid TeamId { get; set; }
+    public InputModel Model { get; set; } = new();
+
+    public class InputModel
+    {
+        public float KeyRate { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TeamId = await IdentityService.GetUserIdAsync();
+    }
+
+    public async Task SendKeyRate()
+    {
+        var command = new SaveKeyRateCommand()
+        {
+            KeyRate = Model.KeyRate,
+            TeamId = TeamId,
+        };
+
+        await Mediator.Send(command);
+
+        Console.WriteLine("Ставка отправлена");
+    }
+
+    
+
+    private string? selectedFileName;
+
+    private void HandleFileSelected(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            selectedFileName = Path.GetFileName(e.Value.ToString());
+            StateHasChanged(); // обязательно
+        }
+    }
+
+    private void RemoveFile()
+    {
+        selectedFileName = null;
+        StateHasChanged();
+    }
+}

@@ -1,4 +1,4 @@
-.nav {
+.nav-cab {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -8,16 +8,16 @@
     padding-bottom: 0.7rem;
 }
 
-.nav.scrolled{
+.nav-cab.scrolled {
     background-color: #fffffff6;
 }
 
-.nav-items {
+.nav-cab-items {
     display: flex;
     gap: 2rem;
 }
 
-::deep .nav-link {
+::deep .nav-cab-link {
     padding: 1rem;
     display: inline-block;
     text-decoration: none;
@@ -25,31 +25,40 @@
     font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
-    
-    
 }
 
-::deep .nav-link:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);  /* больше и темнее */
+::deep .nav-cab-link:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    /* больше и темнее */
     border-radius: 0.3rem;
-    /* padding: 0.7rem; */
 }
+
+
 
 
 /* настраиваем адаптивность */
 @media (max-width: 1024px) {
-    .nav {
+    .nav-cab {
         padding-left: 1rem;
         padding-right: 1rem;
         padding-top: 0.2rem;
         padding-bottom: 0.2rem;
     }
 
-    ::deep .nav-link {
+    ::deep .nav-cab-link {
         font-size: 0.7rem;
     }
 }
 
 @media (max-width: 460px) {
+    .nav-cab {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+    }
 
+    ::deep .nav-cab-link {
+        font-size: 0.4rem;
+    }
 }

@@ -1,9 +1,49 @@
+using System.Reflection;
+using Application;
+using Domain.Interfaces;
+using Infrastructure;
+using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.Cookie.Name = "universiada_cookie";
+    options.LoginPath = "/login";
+    options.LogoutPath = "/logout";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    options.SlidingExpiration = true;
+})
+.AddOpenIdConnect(options =>
+{
+    options.Authority = "http://localhost:8080/realms/universiada-realm";
+    options.ClientId = "web";
+    options.ClientSecret = "VVXnoTTliSEx7T2WFLG74xUx5wU6t4Xp";
+    options.ResponseType = OpenIdConnectResponseType.Code;
+    options.SaveTokens = true;
+    options.Scope.Add("openid");
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+    options.RequireHttpsMetadata = false;
+});
+builder.Services.AddAuthorization();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
 
@@ -16,10 +56,14 @@ if (!app.Environment.IsDevelopment())
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+
 
 app.Run();

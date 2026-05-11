@@ -1,0 +1,74 @@
+@using System.Text.Json
+@inject IJSRuntime JS
+
+<div class="chart-card">
+    <h1 class="chart-title">Мониторинг результатов команды @TeamName</h1>
+    
+    <div class="chart-layout">
+        <div class="chart-left">
+            <canvas id="monitoringCanvas" data-chart="@JsonSerializer.Serialize(ChartData)"></canvas>
+        </div>
+        
+        <!-- Правая колонка: показатели -->
+        <div class="chart-right">
+            <div class="metric">
+                <div class="metric-value" style="color: #5db06f;">@LastKeyRate.ToString("0.0").Replace(',', '.')%</div>
+                <div class="metric-label">Ключевая ставка</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" style="color: #783baa;">@LastInflation.ToString("0.0").Replace(',', '.')%
+                </div>
+                <div class="metric-label">Инфляция</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">@StdDev.ToString("0.00").Replace(',', '.')</div>
+                <div class="metric-label">Стандартное отклонение от цели</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Inject] public IIdentityService IdentityService { get; set; }
+    public string TeamName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TeamName = await IdentityService.GetUserNameAsync();
+    }
+    
+    [Parameter] public List<DataPoint> ChartData { get; set; } = new();
+    
+    // Вычисляем последнее значение ставки
+    private double LastKeyRate => ChartData.LastOrDefault()?.KeyRate ?? 0;
+    
+    // Вычисляем последнее значение инфляции
+    private double LastInflation => ChartData.LastOrDefault()?.Inflation ?? 0;
+    
+    // Вычисляем стандартное отклонение
+    private double StdDev
+    {
+        get
+        {
+            if (ChartData.Count == 0) return 0;
+        
+            // Квадраты разностей
+            var squaredDifferences = ChartData.Select(x => Math.Pow(x.Inflation - x.Target, 2));
+        
+            // Среднее арифметическое
+            var mean = squaredDifferences.Average();
+        
+            // Корень
+            return Math.Sqrt(mean);
+        }
+    }
+    
+    public class DataPoint
+    {
+        public string Period { get; set; } = "";
+        public double KeyRate { get; set; }
+        public double Inflation { get; set; }
+        public double Target { get; set; }
+    }
+}
