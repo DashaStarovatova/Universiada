@@ -5,8 +5,8 @@
 @using System.IO
 @using System.Security.Claims
 @using Web.Components.Components
-
 @rendermode InteractiveServer
+
 
 <div class="form-card">
 
@@ -18,7 +18,7 @@
         <p>Если вы не отправите ставку в указанный период, то будет использовано ваше предыдущее решение.</p>
     </div>
 
-    <EditForm class="right-card" Model="@Model" OnSubmit="@SendKeyRate">
+    <EditForm class="right-card" Model="@Model" OnSubmit="@SendFormAnswer">
         <div class="send-form">
             <p class="title">Отправить решение по ставке</p>
             <p class="subtitle">Введите предлагаемое значение ключевой ставки (в %)</p>
@@ -34,7 +34,8 @@
             <p class="subtitle">Загрузка файлов доступна согласно календарю</p>
 
             <div class="form-field">
-                <input type="file" id="fileInput" class="custom-file-input" @onchange="HandleFileSelected" />
+                <InputFile type="file" id="fileInput" class="custom-file-input" OnChange="HandleFileSelected"
+                           accept=".pdf" />
             </div>
         </div>
 
@@ -43,59 +44,151 @@
             <LinkButton Type=LinkButton.ButtonType.Another Href="">
                 Скачать данные
             </LinkButton>
-            <button type="submit">Отправить</button>
+            <button type="submit" class="send-button">
+                Отправить
+                <span class="btn-dot"></span>
+            </button>
         </div>
 
     </EditForm>
 </div>
 
 
-@code {
-    [Inject] public IMediator Mediator { get; set; }
-    [Inject] public IIdentityService IdentityService { get; set; }
 
-    public Guid TeamId { get; set; }
+
+@code {
+    [Inject] public required IMediator Mediator { get; set; }
+    [Inject] public required IIdentityService IdentityService { get; set; }
+
+
+
+
+    public Guid KeycloakId { get; set; }
+
+
     public InputModel Model { get; set; } = new();
+
 
     public class InputModel
     {
         public float KeyRate { get; set; }
+        public byte[] FileContent { get; set; } = new byte[0];
+        public string Name { get; set; } = "";
+        public string ContentType { get; set; } = "";
+        public long FileSize { get; set; }
+        public string FilePath { get; set; } = "";
     }
 
     protected override async Task OnInitializedAsync()
     {
-        TeamId = await IdentityService.GetUserIdAsync();
+        KeycloakId = await IdentityService.GetUserIdAsync(); // убрали букву I
     }
-
-    public async Task SendKeyRate()
+    public async Task SendFormAnswer()
     {
-        var command = new SaveKeyRateCommand()
+
+        if (1 == 1)
         {
-            KeyRate = Model.KeyRate,
-            TeamId = TeamId,
-        };
-
-        await Mediator.Send(command);
-
+            var command1 = new SendAnswerCommand()
+            {
+                KeyRate = Model.KeyRate,
+                KeycloakId = KeycloakId,
+            };
+            await Mediator.Send(command1);
+        }
+        else if (0 == 0)
+        {
+            @* var command2 = new SendAnswerAndFileCommand()
+            {
+                KeyRate = Model.KeyRate,
+                KeycloakId = KeycloakId,
+                FileContent = Model.FileContent,
+                Name = Model.Name,
+                ContentType = Model.ContentType,
+                FileSize = Model.FileSize,
+                FilePath = Model.FilePath,
+            };
+            await Mediator.Send(command2); *@
+        }
+        else
+        {
+            @* var command3 = new SendFileCommand()
+            {
+                KeycloakId = KeycloakId,
+                FileContent = Model.FileContent,
+                Name = Model.Name,
+                ContentType = Model.ContentType,
+                FileSize = Model.FileSize,
+                FilePath = Model.FilePath,
+            };
+            await Mediator.Send(command3); *@
+        }
         Console.WriteLine("Ставка отправлена");
     }
 
-    
+
+
+
+
+
 
     private string? selectedFileName;
 
-    private void HandleFileSelected(ChangeEventArgs e)
+    private string errorMessage = "";
+    private string fileContent = "";
+    private byte[]? selectedPdfBytes;
+    private string selectedFileExtension = "";
+    private long fileSizeInKB;
+    private const long MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
-        if (e.Value != null)
+        errorMessage = "";
+
+
+        if (e.File != null)
         {
-            selectedFileName = Path.GetFileName(e.Value.ToString());
+
+            selectedFileExtension = Path.GetExtension(e.File.Name).ToLower();
+
+            // Проверка расширения
+            if (selectedFileExtension != ".pdf")
+            {
+                errorMessage = "Ошибка: разрешены только PDF файлы!";
+                selectedPdfBytes = null;
+                return;
+            }
+
+            // Проверка размера
+            if (e.File.Size > MAX_FILE_SIZE)
+            {
+                errorMessage = $"Ошибка: файл слишком большой (максимум 20 MB). Ваш файл: {e.File.Size / 1024 / 1024} MB";
+                selectedPdfBytes = null;
+                return;
+            }
+
+            // Получаем имя и размер
+            selectedFileName = e.File.Name;
+            fileSizeInKB = e.File.Size / 1024;
+
+            // Получаем содержимое как массив байт
+            using var stream = e.File.OpenReadStream(MAX_FILE_SIZE);
+            selectedPdfBytes = new byte[e.File.Size];
+            await stream.ReadAsync(selectedPdfBytes, 0, (int)e.File.Size);
+
+            // Сохраняем в модель
+            InputModel = selectedPdfBytes;
+            InputModel.PdfFileName = selectedFileName;
+
+
+
+
             StateHasChanged(); // обязательно
         }
-    }
 
-    private void RemoveFile()
+        @* private void RemoveFile()
     {
         selectedFileName = null;
         StateHasChanged();
+    } *@
     }
 }

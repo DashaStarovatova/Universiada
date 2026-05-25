@@ -17,6 +17,7 @@
 
 .left-card p {
     font-size: 1rem;
+    display: flex;
 }
 
 
@@ -53,37 +54,24 @@
     margin: 1rem 0;
 }
 
-.field-input:focus {
-    outline: none;
-}
-
-::deep .field-input {
-    width: 100%;
-    padding: 1.3rem 1rem;
-    border: none;
-    background: transparent;
-    font-size: 1rem;
-    font-family: inherit;
-    box-sizing: border-box;
-    cursor: pointer;
-}
-
 .form-field {
     border-radius: 1rem;
     border: 2px solid #5db06f;
     background: white;
     margin-bottom: 1rem;
     transition: all 0.2s ease;
+    padding: 1rem;
 }
+
 
 .form-field:hover {
     border-color: #7c57d9;
     background: #f9f9f9;
 }
 
-.field-input {
+
+::deep .field-input {
     width: 100%;
-    padding: 1.3rem 1rem;
     border: none;
     background: transparent;
     font-size: 1rem;
@@ -92,36 +80,22 @@
     cursor: pointer;
 }
 
-.field-input {
-    cursor: pointer;
-}
-
-.custom-file-input {
-    display: block;
-    padding: 0.7rem 1rem;
-    border-radius: 1rem;
-    background: white;
+::deep .custom-file-input {
+    width: 100%;
+    border: none;
+    background: transparent;
     font-size: 1rem;
     font-family: inherit;
-    text-align: left;
-    color: rgb(95, 95, 95);
-    cursor: pointer;
-
-    width: 100%;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
-.custom-file-input {
-    border-color: #7c57d9;
-    background: #f9f9f9;
-}
 
-.custom-file-input::-webkit-file-upload-button {
-    background: #7c57d9;
-    color: white;
-    border: none;
-    border-radius: 2rem;
-    padding: 0.7rem 1rem;
+::deep .custom-file-input::-webkit-file-upload-button {
+    border-color: #c0c0c0;
+    background: rgba(216, 216, 216, 0.479);
+    border-radius: 0.5rem;
+    border-width: 0.1rem;
     cursor: pointer;
 }
 
@@ -132,8 +106,37 @@
     gap: 1rem;
 }
 
+.form-action button {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 2rem;
+    border: none;
+    background-color: black;
+    gap: 0.7rem;
+    padding: 1rem 2rem;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 600;
+    color: white;
+}
 
 
+.form-action button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-dot {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    clip-path: circle(50%);
+    flex-shrink: 0;
+    background-color: #81f381;
+}
 
 
 /* настраиваем адаптивность */
@@ -176,6 +179,23 @@
 
     .form-action {
         justify-content: center;
+    }
+
+    .form-action button {
+        font-size: 0.8rem;
+        justify-content: center;
+    }
+
+    ::deep .custom-file-input::-webkit-file-upload-button {
+        font-size: 0.8rem;
+    }
+
+    ::deep .custom-file-input {
+        font-size: 0.8rem;
+    }
+
+    ::deep .field-input {
+        font-size: 0.8rem;
     }
 }
 
@@ -228,6 +248,23 @@
         width: 100%;
         margin: 0;
         margin-bottom: 0.5rem;
+    }
+
+    .form-action button {
+        font-size: 0.6rem;
+        justify-content: center;
+    }
+
+    ::deep .custom-file-input::-webkit-file-upload-button {
+        font-size: 0.6rem;
+    }
+
+    ::deep .custom-file-input {
+        font-size: 0.6rem;
+    }
+
+    ::deep .field-input {
+        font-size: 0.6rem;
     }
 
 }

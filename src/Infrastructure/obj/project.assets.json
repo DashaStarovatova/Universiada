@@ -2820,11 +2820,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Infrastructure\\Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Infrastructure\\Infrastructure.csproj",
       "projectName": "Infrastructure",
-      "projectPath": "c:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Infrastructure\\Infrastructure.csproj",
+      "projectPath": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Infrastructure\\Infrastructure.csproj",
       "packagesPath": "C:\\Users\\Darya\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Infrastructure\\obj\\",
+      "outputPath": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Darya\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -3180,5 +3180,13 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Произошла ошибка при получении данных уязвимости пакета: Не удалось загрузить индекс служб для источника https://api.nuget.org/v3/index.json."
+    }
+  ]
 }

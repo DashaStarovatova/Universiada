@@ -44,5 +44,15 @@
     "C:\\Users\\Darya\\.nuget\\packages\\system.composition.runtime\\9.0.0\\system.composition.runtime.9.0.0.nupkg.sha512",
     "C:\\Users\\Darya\\.nuget\\packages\\system.composition.typedparts\\9.0.0\\system.composition.typedparts.9.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Произошла ошибка при получении данных уязвимости пакета: Не удалось загрузить индекс служб для источника https://api.nuget.org/v3/index.json.",
+      "projectPath": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Infrastructure\\Infrastructure.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Infrastructure\\Infrastructure.csproj",
+      "targetGraphs": []
+    }
+  ]
 }
