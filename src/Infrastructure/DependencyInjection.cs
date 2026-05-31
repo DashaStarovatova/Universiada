@@ -25,7 +25,6 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString));
 
         // Регистрация репозиториев
-        services.AddScoped<ITeamRepository, TeamRepository>();
         services.AddScoped<IResultRepository, ResultRepository>();
         services.AddScoped<ILoadedFileRepository, LoadedFileRepository>();
         services.AddScoped<IAnswerRepository, AnswerRepository>();

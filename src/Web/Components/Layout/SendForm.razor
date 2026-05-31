@@ -1,10 +1,10 @@
-@inject IJSRuntime JS
-@using MediatR
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Components.Forms
 @using System.IO
-@using System.Security.Claims
+@using Application.Commands
+@using Application.Models
+@using MediatR
+@using Microsoft.AspNetCore.Components.Forms
 @using Web.Components.Components
+
 @rendermode InteractiveServer
 
 
@@ -18,7 +18,7 @@
         <p>Если вы не отправите ставку в указанный период, то будет использовано ваше предыдущее решение.</p>
     </div>
 
-    <EditForm class="right-card" Model="@Model" OnSubmit="@SendFormAnswer">
+    <EditForm class="right-card" Model="@Model" OnSubmit="@SendFormAnswer" FormName="sendForm">
         <div class="send-form">
             <p class="title">Отправить решение по ставке</p>
             <p class="subtitle">Введите предлагаемое значение ключевой ставки (в %)</p>
@@ -59,91 +59,29 @@
 @code {
     [Inject] public required IMediator Mediator { get; set; }
     [Inject] public required IIdentityService IdentityService { get; set; }
-
-
-
-
-    public Guid KeycloakId { get; set; }
-
-
-    public InputModel Model { get; set; } = new();
-
-
-    public class InputModel
-    {
-        public float KeyRate { get; set; }
-        public byte[] FileContent { get; set; } = new byte[0];
-        public string Name { get; set; } = "";
-        public string ContentType { get; set; } = "";
-        public long FileSize { get; set; }
-        public string FilePath { get; set; } = "";
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        KeycloakId = await IdentityService.GetUserIdAsync(); // убрали букву I
-    }
-    public async Task SendFormAnswer()
-    {
-
-        if (1 == 1)
-        {
-            var command1 = new SendAnswerCommand()
-            {
-                KeyRate = Model.KeyRate,
-                KeycloakId = KeycloakId,
-            };
-            await Mediator.Send(command1);
-        }
-        else if (0 == 0)
-        {
-            @* var command2 = new SendAnswerAndFileCommand()
-            {
-                KeyRate = Model.KeyRate,
-                KeycloakId = KeycloakId,
-                FileContent = Model.FileContent,
-                Name = Model.Name,
-                ContentType = Model.ContentType,
-                FileSize = Model.FileSize,
-                FilePath = Model.FilePath,
-            };
-            await Mediator.Send(command2); *@
-        }
-        else
-        {
-            @* var command3 = new SendFileCommand()
-            {
-                KeycloakId = KeycloakId,
-                FileContent = Model.FileContent,
-                Name = Model.Name,
-                ContentType = Model.ContentType,
-                FileSize = Model.FileSize,
-                FilePath = Model.FilePath,
-            };
-            await Mediator.Send(command3); *@
-        }
-        Console.WriteLine("Ставка отправлена");
-    }
-
-
-
-
-
-
+    [Inject] public required IEventCalendarService Calendar { get; set; }
+    [Inject] public required ILogger<SendForm> Logger { get; set; }
 
     private string? selectedFileName;
-
     private string errorMessage = "";
-    private string fileContent = "";
     private byte[]? selectedPdfBytes;
     private string selectedFileExtension = "";
     private long fileSizeInKB;
     private const long MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
 
+    public Guid KeycloakId { get; set; }
+    public string KeycloakName { get; set; }
+    public InputModel Model { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        KeycloakId = await IdentityService.GetUserIdAsync();
+        KeycloakName = await IdentityService.GetUserNameAsync();
+    }
+
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         errorMessage = "";
-
 
         if (e.File != null)
         {
@@ -176,19 +114,58 @@
             await stream.ReadAsync(selectedPdfBytes, 0, (int)e.File.Size);
 
             // Сохраняем в модель
-            InputModel = selectedPdfBytes;
-            InputModel.PdfFileName = selectedFileName;
+            Model.FileContent = selectedPdfBytes;
+            Model.Name = selectedFileName;
+            Model.FileSize = fileSizeInKB;
 
-
-
-
-            StateHasChanged(); // обязательно
+            StateHasChanged(); // обязательно, вручную обновляет экран
         }
+    }
 
-        @* private void RemoveFile()
+    public async Task SendFormAnswer()
     {
-        selectedFileName = null;
-        StateHasChanged();
-    } *@
+        var currentDate = DateTime.UtcNow;
+        var currentEvent = Calendar.GetEventTypeByDate(currentDate);
+
+        IRequest<ResultBase> command = currentEvent switch
+        {
+            EventTypes.KeyRateSend => new SendKeyRateCommand()
+            {
+                TeamId = KeycloakId,
+                TeamName = KeycloakName,
+                KeyRate = Model.KeyRate
+            },
+            EventTypes.KeyRateAndMetodologySend => new SendKeyRateAndMetodologyCommand()
+            {
+                TeamId = KeycloakId,
+                TeamName = KeycloakName,
+                KeyRate = Model.KeyRate,
+                FileName = Model.Name,
+                FileData = Model.FileContent
+            },
+            EventTypes.MetodologySend => new SendMetodologyCommand()
+            {
+                TeamId = KeycloakId,
+                TeamName = KeycloakName,
+                FileName = Model.Name,
+                FileData = Model.FileContent
+            },
+
+            _ => throw new NotImplementedException()
+        };
+
+        var response = await Mediator.Send(command);
+
+        Logger.LogInformation("Ключевая ставка отправлена");
+    }
+
+    public class InputModel
+    {
+        public float KeyRate { get; set; }
+        public byte[] FileContent { get; set; } = new byte[0];
+        public string Name { get; set; } = "";
+        public string ContentType { get; set; } = "pdf";
+        public long FileSize { get; set; }
+        public string FilePath { get; set; } = "c:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\letsgo";
     }
 }

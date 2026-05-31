@@ -1,8 +1,11 @@
 using System.Reflection;
 using Application;
+using Application.Services;
 using Domain.Interfaces;
+using Domain.Repositories;
 using Infrastructure;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -37,6 +40,7 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IEventCalendarService, StubEventCalendarService>();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -44,6 +48,11 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddScoped<IAnswersRepository, AnswersRepository>();
+builder.Services.AddScoped<IResultsFactory, ResultsFacroty>();
+builder.Services.AddSingleton<IAnswersResolver, MatlabResolver>();
+builder.Services.AddScoped<IFileStore, FileStore>();
 
 var app = builder.Build();
 

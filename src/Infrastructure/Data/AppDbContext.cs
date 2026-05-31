@@ -17,7 +17,6 @@ public class AppDbContext : DbContext
 
     // Объявляет, что у нас будет таблица для объектов Team, и обращаться к ней в коде мы будем через свойство Teams.
     // DbSet - это коллекция, через которую мы добавляем, ищем, удаляем команды.
-    public DbSet<Team> Teams { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<LoadedFile> LoadedFiles { get; set; }
     public DbSet<Result> Results { get; set; }
@@ -33,40 +32,12 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // ========== НАСТРОЙКА TEAM ==========
-        modelBuilder.Entity<Team>(entity =>
-        {
-            // Первичный ключ
-            entity.HasKey(t => t.Id);
-
-            // Настройки полей
-            entity.Property(t => t.Name)
-                .IsRequired()           // NOT NULL
-                .HasMaxLength(100);      // максимальная длина 100
-
-            entity.Property(t => t.CreatedAt)
-                .IsRequired();
-
-            entity.Property(t => t.KeycloakId)
-                .IsRequired();
-
-            // Уникальный индекс для KeycloakId
-            entity.HasIndex(t => t.KeycloakId)
-                .IsUnique();
-
-        });
 
         // ========== НАСТРОЙКА ANSWER ==========
         modelBuilder.Entity<Answer>(entity =>
         {
             // Первичный ключ
             entity.HasKey(a => a.Id);
-
-            // Настройка связи с Team
-            entity.HasOne<Team>()                    // у Answer есть одна Team
-                .WithMany()                           // у Team много Answer
-                .HasForeignKey(a => a.TeamId)         // внешний ключ - TeamId
-                .HasPrincipalKey(t => t.Id)
-                .OnDelete(DeleteBehavior.Cascade);    // при удалении Team удалять все Answer
 
             // Настройки полей
             entity.Property(a => a.AnswerValue)
@@ -84,13 +55,6 @@ public class AppDbContext : DbContext
         {
             // Первичный ключ
             entity.HasKey(l => l.Id);
-
-            // Настройка связи с Team
-            entity.HasOne<Team>()                    // у LoadedFile есть одна Team
-                .WithMany()                           // у Team много LoadedFile
-                .HasForeignKey(l => l.TeamId)         // внешний ключ - TeamId
-                .HasPrincipalKey(t => t.Id)
-                .OnDelete(DeleteBehavior.Cascade);    // при удалении Team удалять все файлы
 
             // Настройки полей
             entity.Property(l => l.Name)
@@ -121,13 +85,6 @@ public class AppDbContext : DbContext
         {
             // Первичный ключ
             entity.HasKey(r => r.Id);
-
-            // Настройка связи с Team
-            entity.HasOne<Team>()                    // у Result есть одна Team
-                .WithMany()                           // у Team много Result
-                .HasForeignKey(r => r.TeamId)         // внешний ключ - TeamId
-                .HasPrincipalKey(t => t.Id)
-                .OnDelete(DeleteBehavior.Cascade);    // при удалении Team удалять все Result
 
 
             // Уникальность: у команды может быть только один результат за период

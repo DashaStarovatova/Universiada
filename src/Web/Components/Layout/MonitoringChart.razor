@@ -1,14 +1,18 @@
 @using System.Text.Json
+@using MediatR
+@* @rendermode InteractiveServer *@
 @inject IJSRuntime JS
 
 <div class="chart-card">
     <h1 class="chart-title">Мониторинг результатов команды @TeamName</h1>
-    
+
     <div class="chart-layout">
         <div class="chart-left">
-            <canvas id="monitoringCanvas" data-chart="@JsonSerializer.Serialize(ChartData)"></canvas>
+            @* <canvas id="monitoringCanvas" data-chart="@JsonSerializer.Serialize(ChartData)"></canvas> *@
+            <canvas id="monitoringCanvas" data-chart="@JsonSerializer.Serialize(ChartData)"
+                    @key="ChartData?.Count"></canvas>
         </div>
-        
+
         <!-- Правая колонка: показатели -->
         <div class="chart-right">
             <div class="metric">
@@ -30,40 +34,48 @@
 
 
 @code {
-    [Inject] public IIdentityService IdentityService { get; set; }
-    public string TeamName { get; set; }
+    [Inject] public required IMediator Mediator { get; set; }
+    [Inject] public required IIdentityService IdentityService { get; set; }
+    public Guid KeycloakId { get; set; }
 
-    protected override async Task OnInitializedAsync()
+
+
+    [Parameter] public string TeamName { get; set; } = "";
+
+    @* protected override async Task OnInitializedAsync()
     {
-        TeamName = await IdentityService.GetUserNameAsync();
-    }
-    
+        KeycloakId = await IdentityService.GetUserIdAsync();
+    } *@
+
+
+
+
     [Parameter] public List<DataPoint> ChartData { get; set; } = new();
-    
+
     // Вычисляем последнее значение ставки
     private double LastKeyRate => ChartData.LastOrDefault()?.KeyRate ?? 0;
-    
+
     // Вычисляем последнее значение инфляции
     private double LastInflation => ChartData.LastOrDefault()?.Inflation ?? 0;
-    
+
     // Вычисляем стандартное отклонение
     private double StdDev
     {
         get
         {
             if (ChartData.Count == 0) return 0;
-        
+
             // Квадраты разностей
             var squaredDifferences = ChartData.Select(x => Math.Pow(x.Inflation - x.Target, 2));
-        
+
             // Среднее арифметическое
             var mean = squaredDifferences.Average();
-        
+
             // Корень
             return Math.Sqrt(mean);
         }
     }
-    
+
     public class DataPoint
     {
         public string Period { get; set; } = "";
@@ -71,4 +83,10 @@
         public double Inflation { get; set; }
         public double Target { get; set; }
     }
+
+
+
+
+    
+
 }

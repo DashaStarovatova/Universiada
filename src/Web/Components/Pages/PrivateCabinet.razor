@@ -1,6 +1,7 @@
 @page "/econ-cabinet"
+@using MediatR
 
-@rendermode InteractiveServer
+@* @rendermode InteractiveServer *@
 
 @using Microsoft.AspNetCore.Authorization
 
@@ -12,23 +13,83 @@
 
 <main>
     <SendForm />
-    <MonitoringChart ChartData="@realData" />
+    <MonitoringChart ChartData="realData" TeamName="TeamName" />
 </main>
 
 @code {
     private List<MonitoringChart.DataPoint> realData = new()
     {
-        new() { Period = "2023Q1", KeyRate = 7.5, Inflation = 4.2, Target = 4.0 },
+        @* new() { Period = "2023Q1", KeyRate = 7.5, Inflation = 4.2, Target = 4.0 },
         new() { Period = "2023Q2", KeyRate = 7.4, Inflation = 3.9, Target = 4.0 },
         new() { Period = "2023Q3", KeyRate = 7.2, Inflation = 3.4, Target = 4.0 },
         new() { Period = "2023Q4", KeyRate = 7.1, Inflation = 3.9, Target = 4.0 },
         new() { Period = "2024Q1", KeyRate = 7.0, Inflation = 4.5, Target = 4.0 },
         new() { Period = "2024Q2", KeyRate = 7.4, Inflation = 3.9, Target = 4.0 },
         new() { Period = "2024Q3", KeyRate = 7.2, Inflation = 3.4, Target = 4.0 },
-        new() { Period = "2024Q4", KeyRate = 7.1, Inflation = 3.9, Target = 4.0 },
+        new() { Period = "2024Q4", KeyRate = 7.1, Inflation = 3.9, Target = 4.0 }, *@
 
     };
 
-    private string teamName = "Test";
+    [Inject] public required IMediator Mediator { get; set; }
+    [Inject] public required IIdentityService IdentityService { get; set; }
 
+    public Guid KeycloakId { get; set; }
+    public List<Result>? ResultsList { get; set; }
+    public class DataForChart
+    {
+
+        public string Period { get; set; } = "";
+        public double CPI { get; set; }
+        public double KeyRate { get; set; }
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        KeycloakId = await IdentityService.GetUserIdAsync();
+        realData = await GetResults();
+        @* TeamName = await GetTeamName(); *@
+        TeamName = await IdentityService.GetUserNameAsync();
+    }
+
+
+    public class Result
+
+    {
+        public Guid Id { get; set; }
+        public string Period { get; set; } = "";
+        public double NominalExchangeRate { get; set; }
+        public double CPI { get; set; }
+        public double RealExchangeRate { get; set; }
+        public double RealGDP { get; set; }
+        public double KeyRate { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public Guid? AnswerId { get; set; }
+
+    }
+
+    public async Task<List<MonitoringChart.DataPoint>> GetResults()
+    {
+
+        var query2 = new GetResultsQuery()
+        {
+            TeamId = KeycloakId,
+        };
+        var domainResults = await Mediator.Send(query2);
+
+    
+        // Маппинг Domain.Result -> MonitoringChart.DataPoint
+        var dataPoints = domainResults.Select(r => new MonitoringChart.DataPoint
+        {
+            Period = r.Period, // предположим, у Domain.Result есть свойство Period
+            KeyRate = r.KeyRate, // и KeyRate
+            Inflation = r.CPI, // и Inflation
+            Target = 4 // и Target
+        }).ToList();
+
+        return dataPoints;
+    }
+
+
+    public string TeamName { get; set; } = "";
 }

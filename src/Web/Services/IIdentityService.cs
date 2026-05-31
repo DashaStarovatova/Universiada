@@ -5,6 +5,7 @@ public interface IIdentityService
 {
     public Task<Guid> GetUserIdAsync();
     public Task<string> GetUserNameAsync();
+    Task<string?> GetIdTokenAsync();
 }
 
 public class IdentityService : IIdentityService
@@ -28,5 +29,18 @@ public class IdentityService : IIdentityService
         var state = await _provider.GetAuthenticationStateAsync();
 
         return state.User.FindFirstValue(ClaimTypes.GivenName)!;
+    }
+
+    public async Task<string?> GetIdTokenAsync()
+    {
+        var state = await _provider.GetAuthenticationStateAsync();
+
+        // Ищем claim с именем "id_token"
+        var idToken = state.User.FindFirst("id_token")?.Value;
+
+        // Или альтернативный вариант поиска:
+        // var idToken = state.User.Claims.FirstOrDefault(c => c.Type == "id_token")?.Value;
+
+        return idToken;
     }
 }
