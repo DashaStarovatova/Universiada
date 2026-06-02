@@ -42,7 +42,6 @@ public class SendKeyRateAndMetodologyCommandHandler
 
         var answer = new Answer(
             command.TeamId,
-            command.TeamName,
             command.KeyRate);
 
         await _repository.AddAsync(answer, cancellationToken);

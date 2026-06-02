@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:15
-    container_name: universiada_api_db
+    container_name: postgres-universiada
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123

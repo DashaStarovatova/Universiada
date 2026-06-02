@@ -19,13 +19,9 @@ public class Answer
         CreatedDate = DateTime.UtcNow.Date;
     }
 
-    public Answer(Guid teamId, string teamName, float keyRate)
-    {
-        TeamId = teamId;
-    }
-
     public bool IsTodayAnswer()
     {
-        return CreatedDate.Date == DateTime.UtcNow.Date;
+        // return CreatedDate.Date == DateTime.UtcNow.Date;
+        return false;
     }
 }
