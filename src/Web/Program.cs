@@ -54,6 +54,8 @@ builder.Services.AddScoped<IResultsFactory, ResultsFacroty>();
 builder.Services.AddSingleton<IAnswersResolver, MatlabResolver>();
 builder.Services.AddScoped<IFileStore, FileStore>();
 
+builder.Services.AddHostedService<MatlabWorker>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
