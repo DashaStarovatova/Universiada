@@ -25,7 +25,7 @@
 
             <div class="form-field">
                 <InputNumber type="text" class="field-input" placeholder="Например: 7.25"
-                             @bind-Value="@Model.KeyRate" />
+                             @bind-Value="@Model.KeyRate" disabled="@IsDisabled"/>
             </div>
 
             <span class="divider"></span>
@@ -35,7 +35,7 @@
 
             <div class="form-field">
                 <InputFile type="file" id="fileInput" class="custom-file-input" OnChange="HandleFileSelected"
-                           accept=".pdf" />
+                           accept=".pdf" disabled="@IsDisabled"/>
             </div>
         </div>
 
@@ -78,6 +78,7 @@
         KeycloakId = await IdentityService.GetUserIdAsync();
         KeycloakName = await IdentityService.GetUserNameAsync();
     }
+
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
@@ -123,9 +124,13 @@
     }
 
     public async Task SendFormAnswer()
+{
+    
+    try
     {
         var currentDate = DateTime.UtcNow;
         var currentEvent = Calendar.GetEventTypeByDate(currentDate);
+        
 
         IRequest<ResultBase> command = currentEvent switch
         {
@@ -150,14 +155,35 @@
                 FileName = Model.Name,
                 FileData = Model.FileContent
             },
-
-            _ => throw new NotImplementedException()
+            _ => throw new NotImplementedException($"Событие {currentEvent} не поддерживается")
         };
 
         var response = await Mediator.Send(command);
+        
+        Logger.LogInformation("Форма успешно отправлена");
+        
+        // Сброс формы после успешной отправки
+        Model = new InputModel();
+        selectedFileName = null;
+        selectedPdfBytes = null;
+        errorMessage = "";
 
-        Logger.LogInformation("Ключевая ставка отправлена");
     }
+    catch (NotImplementedException ex)
+    {
+        errorMessage = ex.Message;
+        Logger.LogError(ex, "Ошибка: неподдерживаемый тип события");
+    }
+    catch (Exception ex)
+    {
+        errorMessage = "Произошла ошибка при отправке данных: " + ex.Message;
+        Logger.LogError(ex, "Ошибка при отправке формы");
+    }
+    finally
+    {
+        StateHasChanged(); // Обновляем интерфейс
+    }
+}
 
     public class InputModel
     {
@@ -168,4 +194,14 @@
         public long FileSize { get; set; }
         public string FilePath { get; set; } = "c:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\letsgo";
     }
+
+
+        private bool IsSubmitEnabled => IsSubmitAvailable();
+
+    private bool IsSubmitAvailable()
+    {
+            return false;
+    }
+
+    private bool IsDisabled => !IsSubmitEnabled;
 }

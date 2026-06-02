@@ -1,39 +1,56 @@
-(function() {
+(function () {
     let chartInstance = null;
-    
+
     function drawChart() {
         const canvas = document.getElementById('monitoringCanvas');
         if (!canvas) return;
-        
+
         const dataAttr = canvas.getAttribute('data-chart');
         if (!dataAttr) return;
-        
+
         let chartData;
         try {
             chartData = JSON.parse(dataAttr);
-        } catch(e) {
+        } catch (e) {
             return;
         }
-        
+
         if (!chartData || chartData.length === 0) return;
-        
+
         // Уничтожаем старый график
         if (chartInstance) {
             chartInstance.destroy();
             chartInstance = null;
         }
-        
+
         const labels = chartData.map(d => d.Period);
         const keyRates = chartData.map(d => d.KeyRate);
-        const inflations = chartData.map(d => d.Inflation);
         const targets = chartData.map(d => d.Target);
-        
+        // const inflations = chartData.map(d => Math.exp(d.Inflation));
+        // Берём данные из chartData
+        const inflation_list = chartData.map(d => d.Inflation);
+        const yValues = chartData.map(d => Math.exp(d.Inflation) * 100);
+        const zList = [101.119, 100.294, 99.454];
+        const inflations = [];
+
+        for (let i = 0; i < yValues.length; i++) {
+            let product;
+
+            if (i === 0) product = zList[0] * zList[1] * zList[2] * yValues[i];
+            else if (i === 1) product = zList[1] * zList[2] * yValues[i - 1] * yValues[i];
+            else if (i === 2) product = zList[2] * yValues[i - 2] * yValues[i - 1] * yValues[i];
+            else product = yValues[i - 3] * yValues[i - 2] * yValues[i - 1] * yValues[i];
+
+            inflations.push(product / Math.pow(100, 3) - 100);
+        }
+
+
         const minDataValue = Math.min(...keyRates, ...inflations);
         const maxDataValue = Math.max(...keyRates, ...inflations);
         let yMin = Math.floor(minDataValue - 1);
         if (yMin < 0) yMin = 0;
         const yMax = Math.ceil(maxDataValue + 1);
-        
+
         let legendFontSize, xFontSize, yFontSize, tooltipFontSize;
         const width = window.innerWidth;
         if (width < 480) {
@@ -47,7 +64,7 @@
         } else {
             legendFontSize = 15; xFontSize = 15; yFontSize = 15; tooltipFontSize = 17;
         }
-        
+
         const ctx = canvas.getContext('2d');
         chartInstance = new Chart(ctx, {
             type: 'line',
@@ -113,11 +130,11 @@
                         borderWidth: 0.5,
                         bodyFont: { weight: 'bold', size: tooltipFontSize },
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 if (context.dataset.label.includes('Цель')) return null;
                                 return context.raw.toFixed(1) + '%';
                             },
-                            labelTextColor: function(context) {
+                            labelTextColor: function (context) {
                                 if (context.dataset.label.includes('Цель')) return null;
                                 return context.dataset.borderColor;
                             }
@@ -132,7 +149,7 @@
                             boxHeight: 1,
                             padding: 12,
                             font: { size: legendFontSize, color: '#000000' },
-                            generateLabels: function(chart) {
+                            generateLabels: function (chart) {
                                 const datasets = chart.data.datasets;
                                 return datasets.map((dataset, i) => ({
                                     text: dataset.label,
@@ -151,7 +168,7 @@
                         min: yMin,
                         max: yMax,
                         grid: { color: 'rgba(0, 0, 0, 0.08)', lineWidth: 1, drawBorder: true, borderDash: [4, 4] },
-                        ticks: { color: '#000000', font: { size: yFontSize }, stepSize: 2, callback: function(value) { return value + '%'; } }
+                        ticks: { color: '#000000', font: { size: yFontSize }, stepSize: 2, callback: function (value) { return value + '%'; } }
                     },
                     x: {
                         grid: { color: 'rgba(0, 0, 0, 0.08)', lineWidth: 1 },
@@ -163,32 +180,32 @@
             }
         });
     }
-    
+
     // 1. Рисуем при загрузке
     // if (document.readyState === 'loading') {
     //     document.addEventListener('DOMContentLoaded', drawChart);
     // } else {
     //     drawChart();
     // }
-    
+
     // 2. Следим за изменением атрибута data-chart (когда Blazor обновляет данные)
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'data-chart') {
                 console.log("Данные изменились, перерисовываю график");
                 drawChart();
             }
         });
     });
-    
+
     // Наблюдаем за canvas
     const canvas = document.getElementById('monitoringCanvas');
     if (canvas) {
         observer.observe(canvas, { attributes: true, attributeFilter: ['data-chart'] });
     }
-    
+
     // 3. Также следим за появлением canvas в DOM (на случай пересоздания)
-    const bodyObserver = new MutationObserver(function() {
+    const bodyObserver = new MutationObserver(function () {
         const newCanvas = document.getElementById('monitoringCanvas');
         if (newCanvas && !newCanvas.hasObserver) {
             newCanvas.hasObserver = true;
@@ -196,13 +213,13 @@
             drawChart();
         }
     });
-    
+
     bodyObserver.observe(document.body, { childList: true, subtree: true });
-    
+
     // 4. При изменении размера окна
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         setTimeout(drawChart, 100);
     });
 
-    
+
 })();

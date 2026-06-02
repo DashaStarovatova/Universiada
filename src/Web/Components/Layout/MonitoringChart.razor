@@ -33,6 +33,7 @@
 </div>
 
 
+
 @code {
     [Inject] public required IMediator Mediator { get; set; }
     [Inject] public required IIdentityService IdentityService { get; set; }
@@ -56,7 +57,61 @@
     private double LastKeyRate => ChartData.LastOrDefault()?.KeyRate ?? 0;
 
     // Вычисляем последнее значение инфляции
-    private double LastInflation => ChartData.LastOrDefault()?.Inflation ?? 0;
+    @* private double LastInflation => ChartData.LastOrDefault()?.Inflation ?? 0; *@
+
+    
+
+
+private List<double> YValues
+{
+    get
+    {
+        var inflationList = ChartData.Select(d => d.Inflation).ToList();
+        var yValues = ChartData
+            .Select(d => Math.Exp(d.Inflation) * 100)
+            .ToList();
+        var result = new List<double>();
+        var zList = new List<double> { 101.119, 100.294, 99.454 };
+
+        for (int i = 0; i < yValues.Count; i++)
+        {
+            double product;
+
+            if (i == 0)
+            {
+                product = zList[0] * zList[1] * zList[2] * yValues[i];
+            }
+            else if (i == 1)
+            {
+                product = zList[1] * zList[2] * yValues[i - 1] * yValues[i];
+            }
+            else if (i == 2)
+            {
+                product = zList[2] * yValues[i - 2] * yValues[i - 1] * yValues[i];
+            }
+            else
+            {
+                product = yValues[i - 3] * yValues[i - 2] * yValues[i - 1] * yValues[i];
+            }
+
+            var z = product / Math.Pow(100, 3) - 100;
+            result.Add(z);
+        }
+
+        return result;
+    }
+}
+
+    private double LastInflation
+    {
+        get
+        {
+            var lastYValue = YValues.LastOrDefault();
+            return lastYValue;
+        }
+    }
+
+
 
     // Вычисляем стандартное отклонение
     private double StdDev
@@ -65,14 +120,12 @@
         {
             if (ChartData.Count == 0) return 0;
 
-            // Квадраты разностей
-            var squaredDifferences = ChartData.Select(x => Math.Pow(x.Inflation - x.Target, 2));
-
-            // Среднее арифметическое
-            var mean = squaredDifferences.Average();
-
-            // Корень
-            return Math.Sqrt(mean);
+            var yValues = YValues;
+            var target = 4; // 4%
+            var squaredDifferences = yValues.Select(y => Math.Pow(y - target, 2));
+            var meanSquared = squaredDifferences.Average();
+            var inflationList = ChartData.Select(d => d.Inflation).ToList();
+            return Math.Sqrt(meanSquared);
         }
     }
 

@@ -5,11 +5,11 @@ public interface IEventCalendarService
     EventTypes GetEventTypeByDate(DateTime currentDate);
 }
 
-public class EventCalendarService : IEventCalendarService
+public class StubEventCalendarService : IEventCalendarService
 {
     private readonly List<DateTime> _keyRateDates = new()
     {
-        new DateTime(2026, 6, 2),
+        new DateTime(2026, 5, 2),
         new DateTime(2026, 5, 10)
     };
 
@@ -47,12 +47,15 @@ public class EventCalendarService : IEventCalendarService
     // }
 }
 
+
 public enum EventTypes
 {
     KeyRateSend,
     KeyRateAndMetodologySend,
     MetodologySend
 }
+
+
 
 public class MatlabWorker : BackgroundService
 {
