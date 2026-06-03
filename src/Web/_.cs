@@ -2,14 +2,14 @@ using Application.Services;
 
 public interface IEventCalendarService
 {
-    EventTypes GetEventTypeByDate(DateTime currentDate);
+    EventTypes? GetEventTypeByDate(DateTime currentDate);
 }
 
 public class StubEventCalendarService : IEventCalendarService
 {
     private readonly List<DateTime> _keyRateDates = new()
     {
-        new DateTime(2026, 5, 2),
+        new DateTime(2026, 6, 3),
         new DateTime(2026, 5, 10)
     };
 
@@ -22,11 +22,11 @@ public class StubEventCalendarService : IEventCalendarService
 
     private readonly List<DateTime> _metodologyDates = new()
     {
-        new DateTime(2026, 5, 14),
+        new DateTime(2026, 5, 3),
         new DateTime(2026, 5, 15)
     };
 
-    public EventTypes GetEventTypeByDate(DateTime date)
+    public EventTypes? GetEventTypeByDate(DateTime date)
     {
         if (_keyRateDates.Contains(date.Date))
             return EventTypes.KeyRateSend;
@@ -37,14 +37,8 @@ public class StubEventCalendarService : IEventCalendarService
         if (_metodologyDates.Contains(date.Date))
             return EventTypes.MetodologySend;
 
-        throw new Exception($"Дата {date:yyyy-MM-dd} не найдена ни в одном списке");
+        return null;
     }
-
-
-    // public EventTypes GetEventTypeByDate(DateTime currentDate)
-    // {
-    //     return EventTypes.KeyRateSend;
-    // }
 }
 
 

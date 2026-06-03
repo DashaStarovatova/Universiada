@@ -4,6 +4,8 @@
 @using MediatR
 @using Microsoft.AspNetCore.Components.Forms
 @using Web.Components.Components
+@inject IJSRuntime JSRuntime
+@using System.Text
 
 @rendermode InteractiveServer
 
@@ -24,8 +26,8 @@
             <p class="subtitle">Введите предлагаемое значение ключевой ставки (в %)</p>
 
             <div class="form-field">
-                <InputNumber type="text" class="field-input" placeholder="Например: 7.25"
-                             @bind-Value="@Model.KeyRate" disabled="@IsDisabled"/>
+                <InputNumber type="text" class="field-input" placeholder="Например: 7.25" @bind-Value="@Model.KeyRate"
+                             disabled="@IsDisabledKeyRate" />
             </div>
 
             <span class="divider"></span>
@@ -35,15 +37,17 @@
 
             <div class="form-field">
                 <InputFile type="file" id="fileInput" class="custom-file-input" OnChange="HandleFileSelected"
-                           accept=".pdf" disabled="@IsDisabled"/>
+                           accept=".pdf" disabled="@IsDisabledFile" />
             </div>
         </div>
 
         
         <div class="form-action">
-            <LinkButton Type=LinkButton.ButtonType.Another Href="">
+            <button type="button" @onclick="DownloadCsv" class="download-button">
                 Скачать данные
-            </LinkButton>
+                <span class="download-btn-dot"></span>
+            </button>
+
             <button type="submit" class="send-button">
                 Отправить
                 <span class="btn-dot"></span>
@@ -61,6 +65,16 @@
     [Inject] public required IIdentityService IdentityService { get; set; }
     [Inject] public required IEventCalendarService Calendar { get; set; }
     [Inject] public required ILogger<SendForm> Logger { get; set; }
+
+    public class DataPoint
+    {
+        public string Period { get; set; } = "";
+        public double NominalExchangeRate { get; set; }
+        public double CPI { get; set; }
+        public double RealExchangeRate { get; set; }
+        public double RealGDP { get; set; }
+        public double KeyRate { get; set; }
+    }
 
     private string? selectedFileName;
     private string errorMessage = "";
@@ -109,10 +123,18 @@
             selectedFileName = e.File.Name;
             fileSizeInKB = e.File.Size / 1024;
 
-            // Получаем содержимое как массив байт
             using var stream = e.File.OpenReadStream(MAX_FILE_SIZE);
-            selectedPdfBytes = new byte[e.File.Size];
-            await stream.ReadAsync(selectedPdfBytes, 0, (int)e.File.Size);
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            selectedPdfBytes = memoryStream.ToArray();
+
+            // Проверка, что прочитали правильное количество байт
+            if (selectedPdfBytes.Length != e.File.Size)
+            {
+                errorMessage = $"Ошибка чтения файла";
+                selectedPdfBytes = null;
+                return;
+            }
 
             // Сохраняем в модель
             Model.FileContent = selectedPdfBytes;
@@ -124,66 +146,77 @@
     }
 
     public async Task SendFormAnswer()
-{
-    
-    try
     {
-        var currentDate = DateTime.UtcNow;
-        var currentEvent = Calendar.GetEventTypeByDate(currentDate);
-        
 
-        IRequest<ResultBase> command = currentEvent switch
+        try
         {
-            EventTypes.KeyRateSend => new SendKeyRateCommand()
-            {
-                TeamId = KeycloakId,
-                TeamName = KeycloakName,
-                KeyRate = Model.KeyRate
-            },
-            EventTypes.KeyRateAndMetodologySend => new SendKeyRateAndMetodologyCommand()
-            {
-                TeamId = KeycloakId,
-                TeamName = KeycloakName,
-                KeyRate = Model.KeyRate,
-                FileName = Model.Name,
-                FileData = Model.FileContent
-            },
-            EventTypes.MetodologySend => new SendMetodologyCommand()
-            {
-                TeamId = KeycloakId,
-                TeamName = KeycloakName,
-                FileName = Model.Name,
-                FileData = Model.FileContent
-            },
-            _ => throw new NotImplementedException($"Событие {currentEvent} не поддерживается")
-        };
+            var currentDate = DateTime.UtcNow;
+            var currentEvent = Calendar.GetEventTypeByDate(currentDate);
 
-        var response = await Mediator.Send(command);
-        
-        Logger.LogInformation("Форма успешно отправлена");
-        
-        // Сброс формы после успешной отправки
-        Model = new InputModel();
-        selectedFileName = null;
-        selectedPdfBytes = null;
-        errorMessage = "";
+            IRequest<ResultBase> command = currentEvent switch
+            {
+                EventTypes.KeyRateSend => new SendKeyRateCommand()
+                {
+                    TeamId = KeycloakId,
+                    TeamName = KeycloakName,
+                    KeyRate = Model.KeyRate
+                },
+                EventTypes.KeyRateAndMetodologySend => new SendKeyRateAndMetodologyCommand()
+                {
+                    TeamId = KeycloakId,
+                    TeamName = KeycloakName,
+                    KeyRate = Model.KeyRate,
+                    FileName = Model.Name,
+                    FileData = Model.FileContent
+                },
+                EventTypes.MetodologySend => new SendMetodologyCommand()
+                {
+                    TeamId = KeycloakId,
+                    TeamName = KeycloakName,
+                    FileName = Model.Name,
+                    FileData = Model.FileContent
+                },
+                _ => null
+            };
 
+            if (command == null)
+            {
+                Logger.LogInformation("Событие {EventType} не поддерживается, форма не отправлена", currentEvent);
+                return; // ← Тихо выходим, без ошибки
+            }
+
+            var response = await Mediator.Send(command);
+
+            if (response is FailResult failResult)
+            {
+                // Показываем сообщение пользователю
+                await JSRuntime.InvokeVoidAsync("alert", "Вы уже отвечали сегодня. Следующая отправка согласно календарю мероприятия.");
+                Logger.LogInformation("Попытка повторной отправки: {Message}", failResult.Description);
+                return; // Выходим, не сбрасывая форму
+            }
+
+            await JSRuntime.InvokeVoidAsync("alert", "Ваш ответ принят! Повторно отправить форму нельзя. Следующая отправка согласно календарю мероприятия.");
+
+            Logger.LogInformation("Форма успешно отправлена");
+
+            // Сброс формы после успешной отправки
+            Model = new InputModel();
+            selectedFileName = null;
+            selectedPdfBytes = null;
+            errorMessage = "";
+
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Произошла ошибка при отправке данных: " + ex.Message;
+            Logger.LogError(ex, "Ошибка при отправке формы");
+            await JSRuntime.InvokeVoidAsync("alert", "При отправке ответа произошла ошибка. Повторите попытку позднее. ");
+        }
+        finally
+        {
+            StateHasChanged();
+        }
     }
-    catch (NotImplementedException ex)
-    {
-        errorMessage = ex.Message;
-        Logger.LogError(ex, "Ошибка: неподдерживаемый тип события");
-    }
-    catch (Exception ex)
-    {
-        errorMessage = "Произошла ошибка при отправке данных: " + ex.Message;
-        Logger.LogError(ex, "Ошибка при отправке формы");
-    }
-    finally
-    {
-        StateHasChanged(); // Обновляем интерфейс
-    }
-}
 
     public class InputModel
     {
@@ -196,12 +229,127 @@
     }
 
 
-        private bool IsSubmitEnabled => IsSubmitAvailable();
+    private bool IsDisabledKeyRate => !IsSubmitAvailableKeyRate();
 
-    private bool IsSubmitAvailable()
+    private bool IsSubmitAvailableKeyRate()
     {
+        // Получаем текущее время по Москве (UTC+3)
+        var moscowTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
+        var currentMoscowTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, moscowTimeZone);
+
+        // Проверка: с 18:01 до 08:59 по Москве
+        var timeOfDay = currentMoscowTime.TimeOfDay;
+        var startNight = new TimeSpan(18, 1, 0); // 18:01
+        var endNight = new TimeSpan(9, 0, 0); // 09:00
+
+        bool isNightTime = timeOfDay >= startNight || timeOfDay < endNight;
+
+        if (isNightTime)
             return false;
+
+        // Проверка события
+        var currentEvent = Calendar.GetEventTypeByDate(DateTime.UtcNow);
+
+        return currentEvent switch
+        {
+            EventTypes.KeyRateSend => true,
+            EventTypes.KeyRateAndMetodologySend => true,
+            EventTypes.MetodologySend => false,
+            _ => false
+        };
     }
 
-    private bool IsDisabled => !IsSubmitEnabled;
+    private bool IsDisabledFile => !IsSubmitAvailableFile();
+
+    private bool IsSubmitAvailableFile()
+    {
+        // Получаем текущее время по Москве (UTC+3)
+        var moscowTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
+        var currentMoscowTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, moscowTimeZone);
+
+        // Проверка: с 18:01 до 08:59 по Москве
+        var timeOfDay = currentMoscowTime.TimeOfDay;
+        var startNight = new TimeSpan(18, 1, 0); // 18:01
+        var endNight = new TimeSpan(9, 0, 0); // 09:00
+
+        bool isNightTime = timeOfDay >= startNight || timeOfDay < endNight;
+
+        if (isNightTime)
+            return false;
+
+        // Проверка события
+        var currentEvent = Calendar.GetEventTypeByDate(DateTime.UtcNow);
+
+        return currentEvent switch
+        {
+            EventTypes.KeyRateSend => false,
+            EventTypes.KeyRateAndMetodologySend => true,
+            EventTypes.MetodologySend => true,
+            _ => false
+        };
+    }
+
+
+
+
+    [Parameter] public List<DataPoint> DataForDownload { get; set; } = new();
+
+    private async Task DownloadCsv()
+    {
+        if (DataForDownload == null || !DataForDownload.Any())
+        {
+            return;
+        }
+
+        // 1. Генерируем CSV строку
+        var csvContent = GenerateCsvString(DataForDownload);
+
+        // 2. Получаем последний период для скачивания
+        var lastPeriod = DataForDownload.Last().Period;
+
+        // 3. Передаём в JS для скачивания
+        var fileName = $"data_{lastPeriod}.csv";
+        await JSRuntime.InvokeVoidAsync("downloadFile", fileName, csvContent);
+    }
+
+
+    private string GenerateCsvString(List<DataPoint> data)
+    {
+        var sb = new StringBuilder();
+
+        // Заголовки (замените на свои поля)
+        sb.AppendLine("period, zzobs_dNFX,zzobs_dPC,zzobs_dRFX, zzobs_dY, zzobs_r_G");
+
+        // Данные
+        foreach (var item in data)
+        {
+            // Экранируем значения (если содержат запятые или кавычки)
+            var period = EscapeCsvField(item.Period);
+            var zzobs_dNFX = item.NominalExchangeRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var zzobs_dPC = item.CPI.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var zzobs_dRFX = item.RealExchangeRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var zzobs_dY = item.RealGDP.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var zzobs_r_G = item.KeyRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+            sb.AppendLine($"{period},{zzobs_dNFX},{zzobs_dPC},{zzobs_dRFX},{zzobs_dY},{zzobs_r_G}");
+        }
+
+        return sb.ToString();
+    }
+
+    private string EscapeCsvField(string field)
+    {
+        if (string.IsNullOrEmpty(field))
+            return string.Empty;
+
+        // Если поле содержит запятую, кавычку или перевод строки - оборачиваем в кавычки
+        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+        {
+            // Дублируем кавычки внутри поля
+            var escaped = field.Replace("\"", "\"\"");
+            return $"\"{escaped}\"";
+        }
+
+        return field;
+    }
 }

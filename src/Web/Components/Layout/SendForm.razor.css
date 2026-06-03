@@ -106,7 +106,7 @@
     gap: 1rem;
 }
 
-.form-action button {
+.send-button {
     display: inline-flex;
     align-items: center;
     border-radius: 2rem;
@@ -123,6 +123,23 @@
     color: white;
 }
 
+.download-button {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 2rem;
+    border: none;
+    background-color: rgb(231, 231, 231);
+    gap: 0.7rem;
+    padding: 1rem 2rem;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 600;
+    color: rgb(0, 0, 0);
+}
+
 
 .form-action button:hover {
     transform: translateY(-4px);
@@ -137,6 +154,16 @@
     flex-shrink: 0;
     background-color: #81f381;
 }
+
+.download-btn-dot {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    clip-path: circle(50%);
+    flex-shrink: 0;
+    background-color: #7c57d9;
+}
+
 
 
 /* настраиваем адаптивность */

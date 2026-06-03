@@ -56,51 +56,46 @@
     // Вычисляем последнее значение ставки
     private double LastKeyRate => ChartData.LastOrDefault()?.KeyRate ?? 0;
 
-    // Вычисляем последнее значение инфляции
-    @* private double LastInflation => ChartData.LastOrDefault()?.Inflation ?? 0; *@
 
-    
-
-
-private List<double> YValues
-{
-    get
+    private List<double> YValues
     {
-        var inflationList = ChartData.Select(d => d.Inflation).ToList();
-        var yValues = ChartData
-            .Select(d => Math.Exp(d.Inflation) * 100)
-            .ToList();
-        var result = new List<double>();
-        var zList = new List<double> { 101.119, 100.294, 99.454 };
-
-        for (int i = 0; i < yValues.Count; i++)
+        get
         {
-            double product;
+            var inflationList = ChartData.Select(d => d.Inflation).ToList();
+            var yValues = ChartData
+                .Select(d => Math.Exp(d.Inflation) * 100)
+                .ToList();
+            var result = new List<double>();
+            var zList = new List<double> { 101.119, 100.294, 99.454 };
 
-            if (i == 0)
+            for (int i = 0; i < yValues.Count; i++)
             {
-                product = zList[0] * zList[1] * zList[2] * yValues[i];
-            }
-            else if (i == 1)
-            {
-                product = zList[1] * zList[2] * yValues[i - 1] * yValues[i];
-            }
-            else if (i == 2)
-            {
-                product = zList[2] * yValues[i - 2] * yValues[i - 1] * yValues[i];
-            }
-            else
-            {
-                product = yValues[i - 3] * yValues[i - 2] * yValues[i - 1] * yValues[i];
+                double product;
+
+                if (i == 0)
+                {
+                    product = zList[0] * zList[1] * zList[2] * yValues[i];
+                }
+                else if (i == 1)
+                {
+                    product = zList[1] * zList[2] * yValues[i - 1] * yValues[i];
+                }
+                else if (i == 2)
+                {
+                    product = zList[2] * yValues[i - 2] * yValues[i - 1] * yValues[i];
+                }
+                else
+                {
+                    product = yValues[i - 3] * yValues[i - 2] * yValues[i - 1] * yValues[i];
+                }
+
+                var z = product / Math.Pow(100, 3) - 100;
+                result.Add(z);
             }
 
-            var z = product / Math.Pow(100, 3) - 100;
-            result.Add(z);
+            return result;
         }
-
-        return result;
     }
-}
 
     private double LastInflation
     {

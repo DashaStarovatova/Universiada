@@ -1,6 +1,5 @@
 @page "/econ-cabinet"
 @using MediatR
-
 @* @rendermode InteractiveServer *@
 
 @using Microsoft.AspNetCore.Authorization
@@ -12,23 +11,13 @@
 </header>
 
 <main>
-    <SendForm />
-    <MonitoringChart ChartData="realData" TeamName="TeamName" />
+    <SendForm DataForDownload="dataForDownload" />
+    <MonitoringChart ChartData="realData"  TeamName="TeamName" />
 </main>
 
 @code {
-    private List<MonitoringChart.DataPoint> realData = new()
-    {
-        @* new() { Period = "2023Q1", KeyRate = 7.5, Inflation = 4.2, Target = 4.0 },
-        new() { Period = "2023Q2", KeyRate = 7.4, Inflation = 3.9, Target = 4.0 },
-        new() { Period = "2023Q3", KeyRate = 7.2, Inflation = 3.4, Target = 4.0 },
-        new() { Period = "2023Q4", KeyRate = 7.1, Inflation = 3.9, Target = 4.0 },
-        new() { Period = "2024Q1", KeyRate = 7.0, Inflation = 4.5, Target = 4.0 },
-        new() { Period = "2024Q2", KeyRate = 7.4, Inflation = 3.9, Target = 4.0 },
-        new() { Period = "2024Q3", KeyRate = 7.2, Inflation = 3.4, Target = 4.0 },
-        new() { Period = "2024Q4", KeyRate = 7.1, Inflation = 3.9, Target = 4.0 }, *@
-
-    };
+    private List<MonitoringChart.DataPoint> realData = new() { };
+    private List<SendForm.DataPoint> dataForDownload = new() { };
 
     [Inject] public required IMediator Mediator { get; set; }
     [Inject] public required IIdentityService IdentityService { get; set; }
@@ -48,8 +37,8 @@
     {
         KeycloakId = await IdentityService.GetUserIdAsync();
         realData = await GetResults();
-        @* TeamName = await GetTeamName(); *@
         TeamName = await IdentityService.GetUserNameAsync();
+        dataForDownload = await GetResultsForDownload();
     }
 
 
@@ -90,6 +79,29 @@
         return dataPoints;
     }
 
+
+    public async Task<List<SendForm.DataPoint>> GetResultsForDownload()
+    {
+
+        var query2 = new GetResultsQuery()
+        {
+            TeamId = KeycloakId,
+        };
+        var domainResults = await Mediator.Send(query2);
+
+
+        var dataPoints = domainResults.Select(r => new SendForm.DataPoint
+        {
+            Period = r.Period,
+            NominalExchangeRate = r.NominalExchangeRate,
+            CPI = r.CPI,
+            RealExchangeRate = r.RealExchangeRate,
+            RealGDP = r.RealGDP,
+            KeyRate = r.KeyRate
+        }).ToList();
+
+        return dataPoints;
+    }
 
     public string TeamName { get; set; } = "";
 }
