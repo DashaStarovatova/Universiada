@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Web.Components;
+using Hangfire;
+using Hangfire.PostgreSql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +58,17 @@ builder.Services.AddScoped<IFileStore, FileStore>();
 
 builder.Services.AddHostedService<MatlabWorker>();
 
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(c => c.UseNpgsqlConnection(builder.Configuration.GetConnectionString("HangfireConnection")))
+);
+// Добавление сервера Hangfire для выполнения фоновых задач
+builder.Services.AddHangfireServer();
+
+builder.Services.AddScoped<CheckAnswersService>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -70,6 +83,17 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
+
+app.UseHangfireDashboard("/hangfire"); // Панель будет доступна по адресу /hangfire
+
+RecurringJob.AddOrUpdate<CheckAnswersService>(
+    "check-all-dates",
+    service => service.RunCheck(CancellationToken.None),
+    "30 18 * * *",
+    new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local
+    });
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()

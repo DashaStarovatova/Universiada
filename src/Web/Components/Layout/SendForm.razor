@@ -158,21 +158,23 @@
                 EventTypes.KeyRateSend => new SendKeyRateCommand()
                 {
                     TeamId = KeycloakId,
-                    TeamName = KeycloakName,
-                    KeyRate = Model.KeyRate
+                    @* TeamName = KeycloakName, *@
+                    KeyRate = Model.KeyRate,
+                    IsNul = false
                 },
                 EventTypes.KeyRateAndMetodologySend => new SendKeyRateAndMetodologyCommand()
                 {
                     TeamId = KeycloakId,
-                    TeamName = KeycloakName,
+                    @* TeamName = KeycloakName, *@
                     KeyRate = Model.KeyRate,
                     FileName = Model.Name,
-                    FileData = Model.FileContent
+                    FileData = Model.FileContent,
+                    IsNul = false
                 },
                 EventTypes.MetodologySend => new SendMetodologyCommand()
                 {
                     TeamId = KeycloakId,
-                    TeamName = KeycloakName,
+                    @* TeamName = KeycloakName, *@
                     FileName = Model.Name,
                     FileData = Model.FileContent
                 },

@@ -78,6 +78,7 @@
     font-family: inherit;
     box-sizing: border-box;
     cursor: pointer;
+    outline: none;
 }
 
 ::deep .custom-file-input {
