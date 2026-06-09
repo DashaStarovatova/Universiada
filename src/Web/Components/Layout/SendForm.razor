@@ -183,6 +183,7 @@
 
             if (command == null)
             {
+                await JSRuntime.InvokeVoidAsync("alert", "Следующая отправка будет доступна согласно календарю мероприятия.");
                 Logger.LogInformation("Событие {EventType} не поддерживается, форма не отправлена", currentEvent);
                 return; // ← Тихо выходим, без ошибки
             }

@@ -89,7 +89,7 @@ app.UseHangfireDashboard("/hangfire"); // Панель будет доступн
 RecurringJob.AddOrUpdate<CheckAnswersService>(
     "check-all-dates",
     service => service.RunCheck(CancellationToken.None),
-    "30 18 * * *",
+    "05 19 * * *",
     new RecurringJobOptions
     {
         TimeZone = TimeZoneInfo.Local
