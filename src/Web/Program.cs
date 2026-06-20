@@ -41,16 +41,15 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.SignedOutRedirectUri = "/";
     options.SignedOutCallbackPath = "/signout-callback-oidc";
-    options.Events.OnRedirectToIdentityProviderForSignOut = async context =>
+    options.Events.OnRedirectToIdentityProviderForSignOut = context =>
     {
-        // Извлекаем id_token из текущей сессии
-        var idToken = await context.HttpContext.GetTokenAsync("id_token");
-
-        if (!string.IsNullOrEmpty(idToken))
+        // Достаем токен из свойств, которые мы положили в эндпоинте /logout
+        if (context.Properties.Items.TryGetValue("id_token_hint", out var idToken))
         {
-            // Добавляем хинт в параметры запроса к Keycloak
             context.ProtocolMessage.IdTokenHint = idToken;
         }
+
+        return Task.CompletedTask;
     };
 });
 builder.Services.AddAuthorization();
@@ -97,13 +96,23 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 
-app.MapGet("/logout", () =>
+app.MapGet("/logout", async (HttpContext context) =>
 {
-    var property = new AuthenticationProperties
+    // 1. Извлекаем id_token вручную, пока сессия куки еще активна
+    var idToken = await context.GetTokenAsync("id_token");
+
+    var properties = new AuthenticationProperties
     {
         RedirectUri = "/"
     };
 
+    // 2. Если токен найден, сохраняем его в свойствах конкретно для этого запроса выхода
+    if (!string.IsNullOrEmpty(idToken))
+    {
+        properties.Items["id_token_hint"] = idToken;
+    }
+
+    // 3. Вызываем очистку обеих схем
     return Results.SignOut(properties, [
         CookieAuthenticationDefaults.AuthenticationScheme,
         OpenIdConnectDefaults.AuthenticationScheme
