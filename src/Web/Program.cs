@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Web.Components;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,6 @@ builder.Services.AddAuthentication(options =>
 {
     options.Cookie.Name = "universiada_cookie";
     options.LoginPath = "/login";
-    options.LogoutPath = "/logout";
     options.ExpireTimeSpan = TimeSpan.FromHours(24);
     options.SlidingExpiration = true;
 })
@@ -39,6 +39,15 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("profile");
     options.Scope.Add("email");
     options.RequireHttpsMetadata = false;
+    options.SignedOutRedirectUri = "/";
+    options.SignedOutCallbackPath = "/signout-callback-oidc";
+    options.Events.OnSignedOutCallbackRedirect = async context =>
+    {
+        await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        context.Response.Redirect("/");
+        context.HandleResponse();
+    };
 });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
@@ -83,6 +92,18 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
+
+app.MapGet("/logout", () =>
+{
+    var property = new AuthenticationProperties
+    {
+        RedirectUri = "/"
+    };
+
+    return Results.SignOut(property, [
+        OpenIdConnectDefaults.AuthenticationScheme
+    ]);
+}).DisableAntiforgery();
 
 app.UseHangfireDashboard("/hangfire"); // Панель будет доступна по адресу /hangfire
 

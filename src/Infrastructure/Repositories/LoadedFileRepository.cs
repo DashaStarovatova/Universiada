@@ -40,18 +40,18 @@ public class LoadedFileRepository : ILoadedFileRepository
         .ToListAsync();
     }
 
-    public async Task<LoadedFile?> GetLatestByTeamIdAndTypeAsync(Guid teamId, string contentType)
+    public async Task<LoadedFile?> GetLatestByTeamIdAsync(Guid teamId, CancellationToken cancellationToken)
     {
         return await _context.LoadedFiles
-        .Where(t => t.TeamId == teamId && t.ContentType == contentType)
+        .Where(t => t.TeamId == teamId)
         .OrderByDescending(t => t.CreatedDate)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task AddAsync(LoadedFile file)
+    public async Task AddAndSaveAsync(LoadedFile file, CancellationToken cancellationToken)
     {
-        await _context.LoadedFiles.AddAsync(file);
-        await _context.SaveChangesAsync();
+        await _context.LoadedFiles.AddAsync(file, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public void Update(LoadedFile file)
@@ -64,9 +64,9 @@ public class LoadedFileRepository : ILoadedFileRepository
         _context.LoadedFiles.Remove(file);
     }
 
-    public async Task SaveAsync()
+    public async Task SaveAsync(CancellationToken cancellationToken)
     {
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<List<LoadedFile>> GetAllAsync()

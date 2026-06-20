@@ -9,13 +9,13 @@ public class LoadedFile
     public string Path { get; set; } = "";
     public string ContentType { get; set; } = ""; // pdf, csv, rar etc.
     public long FileSize { get; set; }     // размер в байтах
-    public DateTime CreatedAt {get ; set;}
+    public DateTime CreatedAt { get; set; }
     public DateTime CreatedDate { get; set; }
 
 
 
-    private LoadedFile() {}
-    
+    private LoadedFile() { }
+
     public LoadedFile(Guid teamId, string name, string path, string contentType, long fileSize) : this()
     {
         Id = Guid.NewGuid();
@@ -25,7 +25,12 @@ public class LoadedFile
         ContentType = contentType;
         FileSize = fileSize;
         CreatedAt = DateTime.UtcNow;
-        CreatedDate = DateTime.UtcNow.Date; 
+        CreatedDate = DateTime.UtcNow.Date;
+    }
+
+    public bool IsTodayFile()
+    {
+        return CreatedDate == DateTime.UtcNow.Date;
     }
 
 }

@@ -16,10 +16,10 @@ public interface ILoadedFileRepository
     Task<List<LoadedFile>> GetByDateRangeAsync(DateTime from, DateTime to);
     
     // Получить последний файл команды определённого типа
-    Task<LoadedFile?> GetLatestByTeamIdAndTypeAsync(Guid teamId, string contentType);
+    Task<LoadedFile?> GetLatestByTeamIdAsync(Guid teamId, CancellationToken cancellationToken) ;
     
     // Добавить новый файл
-    Task AddAsync(LoadedFile file);
+    Task AddAndSaveAsync(LoadedFile file, CancellationToken cancellationToken);
     
     // Обновить информацию о файле
     void Update(LoadedFile file);
@@ -28,7 +28,7 @@ public interface ILoadedFileRepository
     void Remove(LoadedFile file);
 
     // Сохранить в БД
-    Task SaveAsync();
+    Task SaveAsync(CancellationToken cancellationToken);
     
     // Получить все файлы (для админки)
     Task<List<LoadedFile>> GetAllAsync();

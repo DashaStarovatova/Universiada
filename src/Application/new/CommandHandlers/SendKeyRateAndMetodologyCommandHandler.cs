@@ -19,11 +19,13 @@ public class SendKeyRateAndMetodologyCommandHandler
         IAnswersRepository repository,
         IResultsFactory results,
         IAnswersResolver backgroundTasks,
+
         IFileStore store)
     {
         _repository = repository;
         _results = results;
         _backgroundTasks = backgroundTasks;
+       
         _store = store;
     }
 
@@ -40,9 +42,19 @@ public class SendKeyRateAndMetodologyCommandHandler
             return _results.TeamAnswersToday();
         }
 
+        var nullCount = 0; 
+        if (command.IsNul is true)
+        {
+            nullCount = (lastAnswer?.NullCount ?? 0) + 1;
+        } else {
+            nullCount =  lastAnswer?.NullCount ?? 0;
+        }
+        
         var answer = new Answer(
             command.TeamId,
-            command.KeyRate);
+            command.KeyRate,
+            nullCount
+            );
 
         await _repository.AddAsync(answer, cancellationToken);
         await _repository.SaveAsync(cancellationToken);
@@ -50,6 +62,12 @@ public class SendKeyRateAndMetodologyCommandHandler
         _backgroundTasks.AddToQueue(answer);
 
         await _store.SaveAsync(
+            command.TeamId,
+            command.FileName,
+            command.FileData,
+            cancellationToken);
+
+        await _store.SaveToDatabaseAsync(
             command.TeamId,
             command.FileName,
             command.FileData,

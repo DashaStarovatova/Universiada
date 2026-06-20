@@ -33,63 +33,60 @@ public class MatlabResolver : IAnswersResolver
     {
         while (cancellationToken.IsCancellationRequested is false)
         {
-            await foreach (var answer in _answers.ToAsyncEnumerable())
+            if (_answers.TryDequeue(out var answer) is false)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    break;
-                }
-
-                using var scope = provider.CreateScope();
-                var repository = scope.ServiceProvider.GetRequiredService<IResultRepository>();
-
-                var historyPath = $"{_historyFilePath}{answer.TeamId}/{answer.TeamId}.mat";
-
-                var matlabCommand = $"game1_oneDesicion({answer.AnswerValue.ToString(CultureInfo.InvariantCulture)}, 0, '{historyPath}')";
-
-                var processInfo = new ProcessStartInfo()
-                {
-                    FileName = _matlabExeFile,
-                    Arguments = $"-batch \"{matlabCommand}\"",
-                    WorkingDirectory = _workDirectory,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                };
-
-                using var process = new Process()
-                {
-                    StartInfo = processInfo
-                };
-
-                process.Start();
-
-                var output = await process.StandardOutput.ReadToEndAsync(cancellationToken);
-
-                await process.WaitForExitAsync(cancellationToken);
-
-                var results = JsonSerializer.Deserialize<MatlabResult[]>(output);
-
-                if (results is null || results.Length == 0)
-                {
-                    continue;
-                }
-
-                var lastItem = results.Last();
-                var result = new Result(
-                    answer.TeamId,
-                    lastItem.period,
-                    lastItem.zzobs_dNFX,
-                    lastItem.zzobs_dPC,
-                    lastItem.zzobs_dRFX,
-                    lastItem.zzobs_dY,
-                    lastItem.zzobs_r_G,
-                    answer.Id
-                );
-
-                await repository.AddAsync(result);
-                await repository.SaveAsync();
+                continue;
             }
+
+            using var scope = provider.CreateScope();
+            var repository = scope.ServiceProvider.GetRequiredService<IResultRepository>();
+
+            var historyPath = $"{_historyFilePath}{answer.TeamId}/{answer.TeamId}.mat";
+
+            var matlabCommand = $"game1_oneDesicion({answer.AnswerValue.ToString(CultureInfo.InvariantCulture)}, 0, '{historyPath}')";
+
+            var processInfo = new ProcessStartInfo()
+            {
+                FileName = _matlabExeFile,
+                Arguments = $"-batch \"{matlabCommand}\"",
+                WorkingDirectory = _workDirectory,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            };
+
+            using var process = new Process()
+            {
+                StartInfo = processInfo
+            };
+
+            process.Start();
+
+            var output = await process.StandardOutput.ReadToEndAsync(cancellationToken);
+
+            await process.WaitForExitAsync(cancellationToken);
+
+            var results = JsonSerializer.Deserialize<MatlabResult[]>(output);
+
+            if (results is null || results.Length == 0)
+            {
+                continue;
+            }
+
+            var lastItem = results.Last();
+            var result = new Result(
+                answer.TeamId,
+                lastItem.period,
+                lastItem.zzobs_dNFX,
+                lastItem.zzobs_dPC,
+                lastItem.zzobs_dRFX,
+                lastItem.zzobs_dY,
+                lastItem.zzobs_r_G,
+                answer.Id
+            );
+
+            await repository.AddAsync(result);
+            await repository.SaveAsync();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Infrastructure.Data;
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)  
+        : base(options)
     // вызов конструктора родительского класса. : base(options) говорит: "Передай эти настройки родителю (DbContext)"
     {
         // Твой конструктор пустой { } - тебе ничего добавлять не нужно
@@ -31,8 +31,6 @@ public class AppDbContext : DbContext
         // Это вызов метода родительского класса (DbContext).
         base.OnModelCreating(modelBuilder);
 
-        // ========== НАСТРОЙКА TEAM ==========
-
         // ========== НАСТРОЙКА ANSWER ==========
         modelBuilder.Entity<Answer>(entity =>
         {
@@ -47,6 +45,9 @@ public class AppDbContext : DbContext
                 .IsRequired();
 
             entity.Property(a => a.CreatedDate)
+                .IsRequired();
+
+            entity.Property(a => a.NullCount)
                 .IsRequired();
         });
 

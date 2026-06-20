@@ -12,6 +12,7 @@ using Infrastructure.Repositories;  // реализации репозитори
 using Infrastructure.Services;      // реализации сервисов
 using Infrastructure.Data;          // AppDbContext
 
+
 namespace Infrastructure;
 
 public static class DependencyInjection
