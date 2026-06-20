@@ -41,12 +41,16 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.SignedOutRedirectUri = "/";
     options.SignedOutCallbackPath = "/signout-callback-oidc";
-    options.Events.OnSignedOutCallbackRedirect = async context =>
+    options.Events.OnRedirectToIdentityProviderForSignOut = async context =>
     {
-        await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        // Извлекаем id_token из текущей сессии
+        var idToken = await context.HttpContext.GetTokenAsync("id_token");
 
-        context.Response.Redirect("/");
-        context.HandleResponse();
+        if (!string.IsNullOrEmpty(idToken))
+        {
+            // Добавляем хинт в параметры запроса к Keycloak
+            context.ProtocolMessage.IdTokenHint = idToken;
+        }
     };
 });
 builder.Services.AddAuthorization();
@@ -100,7 +104,8 @@ app.MapGet("/logout", () =>
         RedirectUri = "/"
     };
 
-    return Results.SignOut(property, [
+    return Results.SignOut(properties, [
+        CookieAuthenticationDefaults.AuthenticationScheme,
         OpenIdConnectDefaults.AuthenticationScheme
     ]);
 }).DisableAntiforgery();
