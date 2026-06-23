@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.Authority = "http://localhost:8080/realms/universiada-realm";
     options.ClientId = "web";
-    options.ClientSecret = "VVXnoTTliSEx7T2WFLG74xUx5wU6t4Xp";
+    options.ClientSecret = "dMqCeOEtQE3QuqhhNyCJtNOioRiT9Pp2"; //VVXnoTTliSEx7T2WFLG74xUx5wU6t4Xp
     options.ResponseType = OpenIdConnectResponseType.Code;
     options.SaveTokens = true;
     options.Scope.Add("openid");
@@ -40,7 +40,10 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("email");
     options.RequireHttpsMetadata = false;
     options.SignedOutRedirectUri = "/";
-    options.SignedOutCallbackPath = "/signout-callback-oidc";
+    options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidc";
+    options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidc";
+    options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidc";
+    options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidcJ";
     options.Events.OnRedirectToIdentityProviderForSignOut = context =>
     {
         // Достаем токен из свойств, которые мы положили в эндпоинте /logout
@@ -101,6 +104,11 @@ app.MapGet("/logout", async (HttpContext context) =>
     // 1. Извлекаем id_token вручную, пока сессия куки еще активна
     var idToken = await context.GetTokenAsync("id_token");
 
+    if (string.IsNullOrEmpty(idToken))
+    {
+        return Results.Redirect("/");
+    }
+
     var properties = new AuthenticationProperties
     {
         RedirectUri = "/"
@@ -124,7 +132,7 @@ app.UseHangfireDashboard("/hangfire"); // Панель будет доступн
 RecurringJob.AddOrUpdate<CheckAnswersService>(
     "check-all-dates",
     service => service.RunCheck(CancellationToken.None),
-    "05 19 * * *",
+    "30 18 * * *",
     new RecurringJobOptions
     {
         TimeZone = TimeZoneInfo.Local
