@@ -6,7 +6,6 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: UniversiadaDb
-      POSTGRES_MULTIPLE_DATABASES: keycloak
     ports:
       - "5433:5432"
     volumes:
@@ -20,7 +19,7 @@ services:
       KEYCLOAK_ADMIN : admin
       KEYCLOAK_ADMIN_PASSWORD : 123
       KC_DB: postgres
-      KC_DB_URL_HOST: universiada_api_db
+      KC_DB_URL_HOST: postgres-universiada
       KC_DB_URL_PORT: 5432
       KC_DB_URL_DATABASE: keycloak
       KC_DB_USERNAME: admin
