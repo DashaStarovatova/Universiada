@@ -51,5 +51,11 @@
 }
 
 @media (max-width: 460px) {
+    .nav-items {
+        display: none !important;
+    }
 
+    .nav {
+        justify-content: right;
+    }
 }

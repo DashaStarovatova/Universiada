@@ -243,23 +243,23 @@
     }
 
     .left-card p {
-        font-size: 0.6rem;
+        font-size: 0.8rem;
     }
 
     .title {
-        font-size: 0.6rem;
+        font-size: 0.8rem;
     }
 
     .subtitle {
-        font-size: 0.5rem;
+        font-size: 0.6rem;
     }
 
     .field-input {
-        font-size: 0.5rem;
+        font-size: 0.6rem;
     }
 
     .custom-file-input {
-        font-size: 0.5rem;
+        font-size: 0.6rem;
     }
 
     .form-card {
@@ -294,5 +294,9 @@
     ::deep .field-input {
         font-size: 0.6rem;
     }
-
+    
+    .form-action button {
+        font-size: 0.8rem;
+        justify-content: center;
+    }
 }

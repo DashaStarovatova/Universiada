@@ -96,7 +96,7 @@
 /* настраиваем адаптивность */
 @media (max-width: 1439px) {
     .timeline-card {
-        margin: 4rem 2rem;
+        margin: 4rem 6rem;
 
     }
 
@@ -135,7 +135,12 @@
 }
 
 
-@media (max-width: 1024px) {}
+@media (max-width: 1024px) {
+    .timeline-card {
+        margin: 4rem 2rem;
+
+    }
+}
 
 @media (max-width: 768px) {
 
@@ -181,6 +186,7 @@
         height: 3rem;
         align-items: end;
         text-align: left;
+        font-size: 18px;
 
     }
 
@@ -201,19 +207,15 @@
     }
 
     .timeline-action {
+        display: flex;
+        justify-content: flex-end;
         flex: 1;
+        /* Занимает все оставшееся пространство */
     }
 
-    /* 
-    .timeline-content::before {
-        content: '';
-        position: absolute;
-        left: 2rem;
-        top: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, white, transparent);
-        pointer-events: none;
-    } */
+    .timeline-title h1 {
+        font-size: 2rem;
+    }
 
     .timeline-content::before {
         content: '';
@@ -235,36 +237,16 @@
         border-radius: 3px;
     }
 
-    /* .timeline-item {
-    border-left: 3px solid white;
-    padding-left: 1rem;
 }
 
-.timeline-item h2 {
-    margin: 0 0 0.25rem 0;
-}
+@media (max-width: 460px) {
+    .timeline-title h1 {
+        font-size: 1.5rem;
+    }
 
-.timeline-item p {
-    margin: 0;
-} */
-
-    /* .timeline-item h2,
-.timeline-item p {
-    position: relative;
-    margin-left: 2rem;
-}
-
-.timeline-item h2::before,
-.timeline-item p::before {
-    content: '';
-    position: absolute;
-    left: -0.5rem;
-    top: -1rem;
-    bottom: 0;
-    width: 3px;
-    background-color: white;
-} */
+    .timeline-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
 }
-
-@media (max-width: 460px) {}

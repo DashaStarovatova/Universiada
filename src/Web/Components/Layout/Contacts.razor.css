@@ -87,3 +87,35 @@
         font-size: 1.7rem;
     }
 }
+
+
+
+
+
+
+@media (max-width: 768px) {
+    .contacts-header h1 {
+        font-size: 2rem;
+    }
+
+    .contacts-header h2 {
+        font-size: 2rem;
+    }
+}
+
+
+@media (max-width: 460px) {
+    .contacts-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .contacts-header h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .contacts-content{
+        margin-bottom: 1rem;
+    }
+
+}

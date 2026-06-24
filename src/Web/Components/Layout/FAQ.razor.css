@@ -64,9 +64,9 @@ details[open] summary::before {
 
 /* настраиваем адаптивность */
 @media (max-width: 1439px) {
-    
+
     .faq-card {
-        margin: 4rem 2rem;
+        margin: 4rem 6rem;
 
     }
 
@@ -80,6 +80,44 @@ details[open] summary::before {
 
     .content-item p {
         font-size: 0.9rem;
+    }
+
+}
+
+
+@media (max-width: 1024px) {
+    .faq-card {
+        margin: 4rem 2rem;
+    }
+}
+
+
+
+@media (max-width: 768px) {
+    .faq-header h1 {
+        font-size: 2rem;
+    }
+
+    .content-item summary {
+        font-size: 1.5rem;
+    }
+
+    .content-item p {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 460px) {
+    .faq-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .content-item summary {
+        font-size: 1.1rem;
+    }
+
+    .content-item p {
+        font-size: 1rem;
     }
 
 }

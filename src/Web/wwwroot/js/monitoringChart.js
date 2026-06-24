@@ -26,7 +26,6 @@
         const labels = chartData.map(d => d.Period);
         const keyRates = chartData.map(d => d.KeyRate);
         const targets = chartData.map(d => d.Target);
-        // const inflations = chartData.map(d => Math.exp(d.Inflation));
         // Берём данные из chartData
         const inflation_list = chartData.map(d => d.Inflation);
         const yValues = chartData.map(d => Math.exp(d.Inflation) * 100);
@@ -47,16 +46,16 @@
 
         const minDataValue = Math.min(...keyRates, ...inflations);
         const maxDataValue = Math.max(...keyRates, ...inflations);
-        let yMin = Math.floor(minDataValue - 1);
+        let yMin = Math.floor(minDataValue - 2);
         if (yMin < 0) yMin = 0;
-        const yMax = Math.ceil(maxDataValue + 1);
+        const yMax = Math.ceil(maxDataValue + 2);
 
         let legendFontSize, xFontSize, yFontSize, tooltipFontSize;
         const width = window.innerWidth;
         if (width < 480) {
-            legendFontSize = 7; xFontSize = 7; yFontSize = 7; tooltipFontSize = 9;
+            legendFontSize = 8; xFontSize = 8; yFontSize = 8; tooltipFontSize = 10;
         } else if (width < 768) {
-            legendFontSize = 7; xFontSize = 7; yFontSize = 7; tooltipFontSize = 9;
+            legendFontSize = 8; xFontSize = 8; yFontSize = 8; tooltipFontSize = 10;
         } else if (width < 1024) {
             legendFontSize = 10; xFontSize = 10; yFontSize = 10; tooltipFontSize = 12;
         } else if (width < 1280) {

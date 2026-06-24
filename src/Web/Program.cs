@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.Authority = "http://localhost:8080/realms/universiada-realm";
     options.ClientId = "web";
-    options.ClientSecret = "dMqCeOEtQE3QuqhhNyCJtNOioRiT9Pp2"; //VVXnoTTliSEx7T2WFLG74xUx5wU6t4Xp
+    options.ClientSecret = "7D0rqSbmdpL5bBsyom5eQ4AcfhHMGMOB"; //VVXnoTTliSEx7T2WFLG74xUx5wU6t4Xp
     options.ResponseType = OpenIdConnectResponseType.Code;
     options.SaveTokens = true;
     options.Scope.Add("openid");
