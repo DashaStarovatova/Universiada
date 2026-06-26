@@ -10,63 +10,91 @@
 @rendermode InteractiveServer
 
 
-<div class="form-card">
+<div class="form-total">
 
-    <div class="left-card">
-        <p>Отправка доступна с 9:00 до 18:00 МСК согласно календарю олимпиады.</p>
-        <span class="divider"></span>
-        <p>Новые данные появятся после расчета влияния вашей ставки на экономику.</p>
-        <span class="divider"></span>
-        <p>Если вы не отправите ставку в указанный период, то будет использовано ваше предыдущее решение.</p>
+    <div class="teamName">
+        <p>Личный кабинет команды @TeamName</p>
     </div>
 
-    <EditForm class="right-card" Model="@Model" OnSubmit="@SendFormAnswer" FormName="sendForm">
-        <div class="send-form">
-            <p class="title">Отправить решение по ставке</p>
-            <p class="subtitle">Введите предлагаемое значение ключевой ставки (в %)</p>
+    <div class="form-card">
 
-            <div class="form-field">
-                <InputNumber type="text" class="field-input" placeholder="Например: 7.25" @bind-Value="@Model.KeyRate"
-                             disabled="@IsDisabledKeyRate" />
+        <div class="left-card">
+
+            <div class="today-task">
+                <p class="task-title">Задачи на сегодня</p>
+                <p style="white-space: pre-line; padding-left: 1rem;" class="@(@showP1 ? "p1" : "hidden")">@p1</p>
+                <p style="white-space: pre-line;padding-left: 1rem;" class="@(@showP2 ? "p2" : "hidden")">@p2</p>
             </div>
 
-            <span class="divider"></span>
+            <div class="reference-information">
+                @* <span class="divider"></span> *@
+                <p> Отправка доступна с 00:00 до 18:00 МСК согласно календарю олимпиады. </p>
+                <span class="divider"></span>
+                <p> Отправить форму ответа можно 1 раз в день. </p>
+                <span class="divider"></span>
+                <p> Для просмотра новых данных зайдите в личный кабинет через 10 минут после отправки ключевой ставки. </p>
+                <span class="divider"></span>
+                <p> Если вы не отправите ставку в указанный период, то будет использовано ваше предыдущее решение. Пропустить отправку ставки можно не более 2 раз подряд, иначе команда будет дисквалифицирована. </p>
+                </div>
 
-            <p class="title">Загрузить обзор ДКП / Методологию</p>
-            <p class="subtitle">Загрузка файлов доступна согласно календарю</p>
-
-            <div class="form-field">
-                <InputFile type="file" id="fileInput" class="custom-file-input" OnChange="HandleFileSelected"
-                           accept=".pdf" disabled="@IsDisabledFile" />
             </div>
-        </div>
+
+            <EditForm class="right-card" Model="@Model" OnSubmit="@SendFormAnswer" FormName="sendForm">
+
+                <div class="send-form">
+                    <p class="title">Отправить решение по ставке</p>
+                    <p class="subtitle">Введите предлагаемое значение ключевой ставки (в %)</p>
+
+                    <div class="form-field">
+                        <InputNumber type="text" class="field-input" placeholder="Например: 7.25"
+                                     @bind-Value="@Model.KeyRate" disabled="@IsDisabledKeyRate" />
+                    </div>
+
+                    <span class="divider"></span>
+
+                    <p class="title">Загрузить обзор ДКП / Методологию</p>
+                    <p class="subtitle">Загрузка файлов доступна согласно календарю</p>
+
+                    <div class="form-field">
+                        <InputFile type="file" id="fileInput" class="custom-file-input" OnChange="HandleFileSelected"
+                                   accept=".pdf" disabled="@IsDisabledFile" />
+                    </div>
+                </div>
 
         
-        <div class="form-action">
-            <button type="button" @onclick="DownloadCsv" class="download-button">
-                Скачать данные
-                <span class="download-btn-dot"></span>
-            </button>
+                <div class="form-action">
+                    <button type="button" @onclick="DownloadCsv" class="download-button">
+                        Скачать данные
+                        <span class="download-btn-dot"></span>
+                    </button>
 
-            <button type="submit" class="send-button">
-                Отправить
-                <span class="btn-dot"></span>
-            </button>
+                    <button type="submit" class="send-button">
+                        Отправить
+                        <span class="btn-dot"></span>
+                    </button>
+                </div>
+
+            </EditForm>
+
         </div>
-
-    </EditForm>
-</div>
-
-
-
+    </div>
 
 @code {
     [Inject] public required IMediator Mediator { get; set; }
     [Inject] public required IIdentityService IdentityService { get; set; }
     [Inject] public required IEventCalendarService Calendar { get; set; }
     [Inject] public required ILogger<SendForm> Logger { get; set; }
-        
+    [Parameter] public string TeamName { get; set; } = "";
+    [Parameter] public bool showP1 { get; set; }
 
+    public bool showP2 => !@showP1;
+
+    public string p1 { get; set; } = "1";
+    public string p2 { get; set; } = "отсутствуют";
+
+
+
+        
     public class DataPoint
     {
         public string Period { get; set; } = "";
@@ -92,8 +120,18 @@
     {
         KeycloakId = await IdentityService.GetUserIdAsync();
         KeycloakName = await IdentityService.GetUserNameAsync();
+        var currentDate = DateTime.UtcNow;
+        var currentEvent = Calendar.GetEventTypeByDate(currentDate);
+        p1 = currentEvent switch
+        {
+            EventTypes.KeyRateSend =>
+                "— Отправить решение по ключевой ставке",
+            EventTypes.KeyRateAndMetodologySend =>
+               "— Отправить решение по ключевой ставке\n— Отправить обзор ДКП",
+            EventTypes.MetodologySend => "— Отправить обзор ДКП",
+            _ => ""
+        };
     }
-
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
@@ -159,14 +197,12 @@
                 EventTypes.KeyRateSend => new SendKeyRateCommand()
                 {
                     TeamId = KeycloakId,
-                    @* TeamName = KeycloakName, *@
                     KeyRate = Model.KeyRate,
                     IsNul = false
                 },
                 EventTypes.KeyRateAndMetodologySend => new SendKeyRateAndMetodologyCommand()
                 {
                     TeamId = KeycloakId,
-                    @* TeamName = KeycloakName, *@
                     KeyRate = Model.KeyRate,
                     FileName = Model.Name,
                     FileData = Model.FileContent,
@@ -175,7 +211,6 @@
                 EventTypes.MetodologySend => new SendMetodologyCommand()
                 {
                     TeamId = KeycloakId,
-                    @* TeamName = KeycloakName, *@
                     FileName = Model.Name,
                     FileData = Model.FileContent
                 },
@@ -241,10 +276,10 @@
         var moscowTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
         var currentMoscowTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, moscowTimeZone);
 
-        // Проверка: с 18:01 до 08:59 по Москве
+        // Проверка: с 18:01 до 23:59 по Москве
         var timeOfDay = currentMoscowTime.TimeOfDay;
         var startNight = new TimeSpan(18, 1, 0); // 18:01
-        var endNight = new TimeSpan(9, 0, 0); // 09:00
+        var endNight = new TimeSpan(0, 0, 0); // 00:00
 
         bool isNightTime = timeOfDay >= startNight || timeOfDay < endNight;
 
@@ -356,4 +391,7 @@
 
         return field;
     }
+
+
+
 }

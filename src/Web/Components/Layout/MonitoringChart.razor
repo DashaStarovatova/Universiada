@@ -4,7 +4,7 @@
 @inject IJSRuntime JS
 
 <div class="chart-card">
-    <h1 class="chart-title">Мониторинг результатов команды @TeamName</h1>
+    <h1 class="chart-title">Текущий прогресс</h1>
 
     <div class="chart-layout">
         <div class="chart-left">
@@ -38,16 +38,6 @@
     [Inject] public required IMediator Mediator { get; set; }
     [Inject] public required IIdentityService IdentityService { get; set; }
     public Guid KeycloakId { get; set; }
-
-
-
-    [Parameter] public string TeamName { get; set; } = "";
-
-    @* protected override async Task OnInitializedAsync()
-    {
-        KeycloakId = await IdentityService.GetUserIdAsync();
-    } *@
-
 
 
 

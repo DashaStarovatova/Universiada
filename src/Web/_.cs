@@ -9,7 +9,7 @@ public class StubEventCalendarService : IEventCalendarService
 {
     private readonly List<DateTime> _keyRateDates = new()
     {
-        new DateTime(2026, 6, 24),
+        new DateTime(2026, 6, 26),
         new DateTime(2026, 5, 10)
     };
 
@@ -22,7 +22,7 @@ public class StubEventCalendarService : IEventCalendarService
 
     private readonly List<DateTime> _metodologyDates = new()
     {
-        new DateTime(2026, 5, 3),
+        new DateTime(2026, 6, 27),
         new DateTime(2026, 5, 15)
     };
 

@@ -11,8 +11,8 @@
 </header>
 
 <main>
-    <SendForm DataForDownload="dataForDownload" />
-    <MonitoringChart ChartData="realData"  TeamName="TeamName" />
+    <SendForm DataForDownload="dataForDownload" TeamName="@TeamName" showP1=showP1 />
+    <MonitoringChart ChartData="realData" />
 </main>
 
 @code {
@@ -21,6 +21,7 @@
 
     [Inject] public required IMediator Mediator { get; set; }
     [Inject] public required IIdentityService IdentityService { get; set; }
+    [Inject] public required IEventCalendarService Calendar { get; set; }
 
     public Guid KeycloakId { get; set; }
     public List<Result>? ResultsList { get; set; }
@@ -33,14 +34,59 @@
 
     }
 
+    public bool showP1 { get; set; } = true;
+    public string TeamName { get; set; } = "";
     protected override async Task OnInitializedAsync()
     {
         KeycloakId = await IdentityService.GetUserIdAsync();
         realData = await GetResults();
         TeamName = await IdentityService.GetUserNameAsync();
         dataForDownload = await GetResultsForDownload();
+
+
+
+        // ✅ Используем MediatR для получения данных
+        var queryAnswer = new GetAnswerQuery { TeamId = KeycloakId };
+        var lastAnswer = await Mediator.Send(queryAnswer);
+        var queryFile = new GetLastFileQuery { TeamId = KeycloakId };
+        var lastFile = await Mediator.Send(queryFile);
+        var currentDate = DateTime.UtcNow;
+        var currentEvent = Calendar.GetEventTypeByDate(currentDate);
+
+        bool hasTodayAnswer = lastAnswer?.IsTodayAnswer() ?? false;
+        bool hasTodayFile = lastFile?.IsTodayFile() ?? false;
+
+        showP1 = currentEvent switch
+        {
+            EventTypes.KeyRateSend => !hasTodayAnswer,
+            EventTypes.KeyRateAndMetodologySend => !hasTodayAnswer,
+            EventTypes.MetodologySend => !hasTodayFile,
+            _ => true
+        };
     }
 
+    public class Answer
+    {
+        public Guid Id { get; set; }
+        public Guid TeamId { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public double AnswerValue { get; set; }
+        public int NullCount { get; set; } = 0;
+    }
+
+    public class LoadedFile
+
+    {
+        public Guid Id { get; set; }
+        public Guid TeamId { get; set; } // FOREIGN KEY → Team.Id
+        public string Name { get; set; } = "";
+        public string Path { get; set; } = "";
+        public string ContentType { get; set; } = ""; // pdf, csv, rar etc.
+        public long FileSize { get; set; } // размер в байтах
+        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedDate { get; set; }
+    }
 
     public class Result
 
@@ -103,5 +149,5 @@
         return dataPoints;
     }
 
-    public string TeamName { get; set; } = "";
+    
 }
