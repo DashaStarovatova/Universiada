@@ -38,14 +38,16 @@
 }
 
 .p1 {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    padding: 0rem !important;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     font-size: 1.2rem;
     text-transform: uppercase;
 }
 
 .p2 {
-    margin-top: 2rem;
+    padding: 0rem !important;
+    margin-top: 1rem;
     margin-bottom: 2rem;
     color: #a7a7a7; 
     font-size: 1.2rem;
@@ -63,6 +65,18 @@
 
 .reference-information p{
 font-size: 16px;
+}
+
+
+.calendar-link {
+    color: #7c57d9;        /* Наследует цвет текста */
+    text-decoration: none;   /* Убирает подчеркивание */
+    cursor: pointer;         /* Оставляет курсор-руку */
+    font-size: 16px;
+}
+
+.calendar-link:hover {
+    color: #5db06f;          /* Цвет не меняется */
 }
 
 .right-card {
@@ -104,7 +118,7 @@ font-size: 16px;
     background: white;
     margin-bottom: 1rem;
     transition: all 0.2s ease;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 

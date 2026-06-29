@@ -23,18 +23,24 @@
             <div class="today-task">
                 <p class="task-title">Задачи на сегодня</p>
                 <p style="white-space: pre-line; padding-left: 1rem;" class="@(@showP1 ? "p1" : "hidden")">@p1</p>
-                <p style="white-space: pre-line;padding-left: 1rem;" class="@(@showP2 ? "p2" : "hidden")">@p2</p>
+                <p style="white-space: pre-line; padding-left: 1rem;" class="@(@showP2 ? "p2" : "hidden")">@p2</p>
             </div>
 
             <div class="reference-information">
-                @* <span class="divider"></span> *@
-                <p> Отправка доступна с 00:00 до 18:00 МСК согласно календарю олимпиады. </p>
+                <p>
+                    Отправка доступна с 00:00 до 18:00 МСК согласно
+                    <a href="downloads/calendar.pdf" download="Календарь_олимпиады.pdf" class="calendar-link">
+                        календарю олимпиады.
+                    </a>
+                </p>
                 <span class="divider"></span>
-                <p> Отправить форму ответа можно 1 раз в день. </p>
+                <p>Отправить форму ответа можно 1 раз в день. Обзор ДКП отправляется одновременно со ставкой.</p>
                 <span class="divider"></span>
-                <p> Для просмотра новых данных зайдите в личный кабинет через 10 минут после отправки ключевой ставки. </p>
+                <p>Для просмотра новых данных зайдите в личный кабинет через 10 минут после отправки ключевой ставки.
+                </p>
                 <span class="divider"></span>
-                <p> Если вы не отправите ставку в указанный период, то будет использовано ваше предыдущее решение. Пропустить отправку ставки можно не более 2 раз подряд, иначе команда будет дисквалифицирована. </p>
+                <p>Если вы не отправите ставку в указанный период, то будет использовано ваше предыдущее решение.
+                    Пропустить отправку ставки можно не более 2 раз подряд, иначе команда будет дисквалифицирована.</p>
                 </div>
 
             </div>
@@ -43,7 +49,7 @@
 
                 <div class="send-form">
                     <p class="title">Отправить решение по ставке</p>
-                    <p class="subtitle">Введите предлагаемое значение ключевой ставки (в %)</p>
+                    <p class="subtitle">Введите ключевую ставку за @NextPeriod (в %)</p>
 
                     <div class="form-field">
                         <InputNumber type="text" class="field-input" placeholder="Например: 7.25"
@@ -64,7 +70,7 @@
         
                 <div class="form-action">
                     <button type="button" @onclick="DownloadCsv" class="download-button">
-                        Скачать данные
+                        Скачать данные за @LastPeriod
                         <span class="download-btn-dot"></span>
                     </button>
 
@@ -86,15 +92,13 @@
     [Inject] public required ILogger<SendForm> Logger { get; set; }
     [Parameter] public string TeamName { get; set; } = "";
     [Parameter] public bool showP1 { get; set; }
+    [Parameter] public string p1 { get; set; }
+    [Parameter] public string LastPeriod { get; set; } = "";
+    [Parameter] public string NextPeriod { get; set; } = "";
 
     public bool showP2 => !@showP1;
-
-    public string p1 { get; set; } = "1";
     public string p2 { get; set; } = "отсутствуют";
 
-
-
-        
     public class DataPoint
     {
         public string Period { get; set; } = "";
@@ -116,21 +120,63 @@
     public string KeycloakName { get; set; }
     public InputModel Model { get; set; } = new();
 
+    private string LastPeriod1 { get; set; } = "";
+    private string NextPeriod1 { get; set; } = "";
+
     protected override async Task OnInitializedAsync()
     {
         KeycloakId = await IdentityService.GetUserIdAsync();
         KeycloakName = await IdentityService.GetUserNameAsync();
-        var currentDate = DateTime.UtcNow;
-        var currentEvent = Calendar.GetEventTypeByDate(currentDate);
-        p1 = currentEvent switch
+
+
+
+        if (DataForDownload != null && DataForDownload.Any())
         {
-            EventTypes.KeyRateSend =>
-                "— Отправить решение по ключевой ставке",
-            EventTypes.KeyRateAndMetodologySend =>
-               "— Отправить решение по ключевой ставке\n— Отправить обзор ДКП",
-            EventTypes.MetodologySend => "— Отправить обзор ДКП",
-            _ => ""
-        };
+            LastPeriod1 = DataForDownload.Last().Period;
+            NextPeriod1 = GetNextPeriod(LastPeriod);
+        }
+        else
+        {
+            LastPeriod1 = "";
+        }
+    }
+
+
+    public string GetNextPeriod(string currentPeriod)
+    {
+        // Защита от null и пустых строк
+        if (string.IsNullOrWhiteSpace(currentPeriod))
+            return "Нет данных";
+
+        // Разделяем строку по 'Q'
+        var parts = currentPeriod.Split('Q');
+
+        // Проверяем, что строка имеет формат "254Q4"
+        if (parts.Length != 2)
+            return currentPeriod;
+
+        // Парсим год и квартал
+        if (!int.TryParse(parts[0].Trim(), out int year))
+            return currentPeriod;
+
+        if (!int.TryParse(parts[1].Trim(), out int quarter))
+            return currentPeriod;
+
+        // Проверяем допустимость квартала (1-4)
+        if (quarter < 1 || quarter > 4)
+            return currentPeriod;
+
+        // ✅ Увеличиваем квартал
+        quarter++;
+
+        // ✅ Если был 4-й квартал, переходим на следующий год
+        if (quarter > 4)
+        {
+            quarter = 1;
+            year++;
+        }
+
+        return $"{year}Q{quarter}";
     }
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
@@ -249,7 +295,7 @@
         {
             errorMessage = "Произошла ошибка при отправке данных: " + ex.Message;
             Logger.LogError(ex, "Ошибка при отправке формы");
-            await JSRuntime.InvokeVoidAsync("alert", "При отправке ответа произошла ошибка. Повторите попытку позднее. ");
+            await JSRuntime.InvokeVoidAsync("alert", "При отправке ответа произошла ошибка. Повторите попытку позднее. Если в течение дня ошибка не исчезнет обратитесь к организаторам.");
         }
         finally
         {
@@ -334,17 +380,13 @@
     [Parameter] public List<DataPoint> DataForDownload { get; set; } = new();
 
     private async Task DownloadCsv()
-    {
-        if (DataForDownload == null || !DataForDownload.Any())
-        {
-            return;
-        }
 
+    {
         // 1. Генерируем CSV строку
         var csvContent = GenerateCsvString(DataForDownload);
 
         // 2. Получаем последний период для скачивания
-        var lastPeriod = DataForDownload.Last().Period;
+        var lastPeriod = LastPeriod;
 
         // 3. Передаём в JS для скачивания
         var fileName = $"data_{lastPeriod}.csv";
@@ -352,28 +394,100 @@
     }
 
 
+
+
     private string GenerateCsvString(List<DataPoint> data)
     {
         var sb = new StringBuilder();
+        @* sb.AppendLine("sep=,"); *@
+        sb.AppendLine("Период, Номинальный курс кв/кв ln(x/100), Индекс потребительских цен кв/кв ln(x/100), Реальный курс кв/кв ln(x/100), Реальный выпуск кв/кв ln(x/100), Ключевая ставка %"); sb.AppendLine("period, zzobs_dNFX,zzobs_dPC,zzobs_dRFX, zzobs_dY, zzobs_r_G");
 
-        // Заголовки (замените на свои поля)
-        sb.AppendLine("period, zzobs_dNFX,zzobs_dPC,zzobs_dRFX, zzobs_dY, zzobs_r_G");
-
-        // Данные
-        foreach (var item in data)
+        // ⭐ Загружаем исторические данные из CSV
+        var csvPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/downloads", "historical_data.csv");
+        if (File.Exists(csvPath))
         {
-            // Экранируем значения (если содержат запятые или кавычки)
-            var period = EscapeCsvField(item.Period);
-            var zzobs_dNFX = item.NominalExchangeRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var zzobs_dPC = item.CPI.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var zzobs_dRFX = item.RealExchangeRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var zzobs_dY = item.RealGDP.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var zzobs_r_G = item.KeyRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var historicalData = LoadDataFromCsv(csvPath);
+            foreach (var item in historicalData)
+            {
+                // ✅ Принудительно преобразуем числа с точкой
+                var period = EscapeCsvField(item.Period);
+                var nominal = item.NominalExchangeRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var cpi = item.CPI.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var real = item.RealExchangeRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var gdp = item.RealGDP.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var rate = item.KeyRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-            sb.AppendLine($"{period},{zzobs_dNFX},{zzobs_dPC},{zzobs_dRFX},{zzobs_dY},{zzobs_r_G}");
+                sb.AppendLine($"{period},{nominal},{cpi},{real},{gdp},{rate}");
+            }
+        }
+
+        // Добавляем актуальные данные
+        if (data != null && data.Any())
+        {
+            foreach (var item in data)
+            {
+                var period = EscapeCsvField(item.Period);
+                var zzobs_dNFX = item.NominalExchangeRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var zzobs_dPC = item.CPI.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var zzobs_dRFX = item.RealExchangeRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var zzobs_dY = item.RealGDP.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var zzobs_r_G = item.KeyRate.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                sb.AppendLine($"{period},{zzobs_dNFX},{zzobs_dPC},{zzobs_dRFX},{zzobs_dY},{zzobs_r_G}");
+            }
         }
 
         return sb.ToString();
+    }
+
+
+
+    private List<DataPoint> LoadDataFromCsv(string filePath)
+    {
+        var data = new List<DataPoint>();
+
+        using (var reader = new StreamReader(filePath))
+        {
+            // Пропускаем заголовки (если они есть)
+            var header = reader.ReadLine();
+
+            // Читаем строки
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                // Разбиваем по запятой
+                var values = line.Split(',');
+
+                // Проверяем, что колонок достаточно (6 штук)
+                if (values.Length >= 6)
+                {
+                    var dataPoint = new DataPoint
+                    {
+                        Period = values[0].Trim(),
+                        NominalExchangeRate = ParseDouble(values[1]),
+                        CPI = ParseDouble(values[2]),
+                        RealExchangeRate = ParseDouble(values[3]),
+                        RealGDP = ParseDouble(values[4]),
+                        KeyRate = ParseDouble(values[5])
+                    };
+                    data.Add(dataPoint);
+                }
+            }
+        }
+
+        return data;
+    }
+
+
+    private double ParseDouble(string value)
+    {
+        return double.TryParse(value?.Replace(",", "."),
+            System.Globalization.NumberStyles.Any,
+            System.Globalization.CultureInfo.InvariantCulture,
+            out double result) ? result : 0;
     }
 
     private string EscapeCsvField(string field)

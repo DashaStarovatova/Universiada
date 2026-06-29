@@ -11,7 +11,8 @@
 </header>
 
 <main>
-    <SendForm DataForDownload="dataForDownload" TeamName="@TeamName" showP1=showP1 />
+    <SendForm DataForDownload="dataForDownload" TeamName="@TeamName" LastPeriod="@LastPeriod" showP1=@showP1 p1=@p1
+              NextPeriod="@NextPeriod" />
     <MonitoringChart ChartData="realData" />
 </main>
 
@@ -34,6 +35,9 @@
 
     }
 
+    public string LastPeriod { get; set; } = "";
+    public string NextPeriod { get; set; } = "";
+    public string p1 { get; set; } = "";
     public bool showP1 { get; set; } = true;
     public string TeamName { get; set; } = "";
     protected override async Task OnInitializedAsync()
@@ -61,7 +65,29 @@
             EventTypes.KeyRateSend => !hasTodayAnswer,
             EventTypes.KeyRateAndMetodologySend => !hasTodayAnswer,
             EventTypes.MetodologySend => !hasTodayFile,
-            _ => true
+            _ => false
+        };
+
+        if (dataForDownload != null && dataForDownload.Any())
+        {
+            LastPeriod = dataForDownload.Last().Period;
+            NextPeriod = GetNextPeriod(LastPeriod);
+        }
+        else
+        {
+            LastPeriod = "241Q1";
+            NextPeriod = GetNextPeriod(LastPeriod);
+        }
+
+        p1 = currentEvent switch
+        {
+            EventTypes.KeyRateSend =>
+                $"1. Отправить ключевую ставку за {NextPeriod}",
+            EventTypes.KeyRateAndMetodologySend =>
+                $"1. Отправить ключевую ставку за {NextPeriod}\n2. Отправить обзор ДКП",
+            EventTypes.MetodologySend =>
+                $"1. Отправить методологию",
+            _ => ""
         };
     }
 
@@ -125,6 +151,43 @@
         return dataPoints;
     }
 
+
+    public string GetNextPeriod(string currentPeriod)
+    {
+        // Защита от null и пустых строк
+        if (string.IsNullOrWhiteSpace(currentPeriod))
+            return "Нет данных";
+
+        // Разделяем строку по 'Q'
+        var parts = currentPeriod.Split('Q');
+
+        // Проверяем, что строка имеет формат "254Q4"
+        if (parts.Length != 2)
+            return currentPeriod;
+
+        // Парсим год и квартал
+        if (!int.TryParse(parts[0].Trim(), out int year))
+            return currentPeriod;
+
+        if (!int.TryParse(parts[1].Trim(), out int quarter))
+            return currentPeriod;
+
+        // Проверяем допустимость квартала (1-4)
+        if (quarter < 1 || quarter > 4)
+            return currentPeriod;
+
+        // ✅ Увеличиваем квартал
+        quarter++;
+
+        // ✅ Если был 4-й квартал, переходим на следующий год
+        if (quarter > 4)
+        {
+            quarter = 1;
+            year++;
+        }
+
+        return $"{year}Q{quarter}";
+    }
 
     public async Task<List<SendForm.DataPoint>> GetResultsForDownload()
     {
