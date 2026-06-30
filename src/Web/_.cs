@@ -9,13 +9,13 @@ public class StubEventCalendarService : IEventCalendarService
 {
     private readonly List<DateTime> _keyRateDates = new()
     {
-        new DateTime(2026, 6, 28),
+        new DateTime(2026, 6, 29),
         new DateTime(2026, 5, 10)
     };
 
     private readonly List<DateTime> _keyRateAndMetodologyDates = new()
     {
-        new DateTime(2026, 6, 29),
+        new DateTime(2026, 6, 28),
         new DateTime(2026, 5, 4),
         new DateTime(2026, 5, 7)
     };
