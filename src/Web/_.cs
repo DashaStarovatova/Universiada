@@ -15,7 +15,7 @@ public class StubEventCalendarService : IEventCalendarService
 
     private readonly List<DateTime> _keyRateAndMetodologyDates = new()
     {
-        new DateTime(2026, 6, 28),
+        new DateTime(2026, 6, 30),
         new DateTime(2026, 5, 4),
         new DateTime(2026, 5, 7)
     };

@@ -32,6 +32,25 @@
 
 }
 
+.right-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* height: 100% - не обязательно, но можно оставить */
+    height: 100%;
+}
+
+.right-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* ← ГЛАВНОЕ: центрирование по вертикали */
+    height: 100%;
+    width: 100%;
+    gap: 0;
+    /* Убираем лишние отступы */
+}
+
 .task-title {
     font-weight: bold;
     font-size: 1.6rem;
@@ -68,23 +87,18 @@
     font-size: 16px;
 }
 
-
 .calendar-link {
     color: #7c57d9;
-    /* Наследует цвет текста */
     text-decoration: none;
-    /* Убирает подчеркивание */
     cursor: pointer;
-    /* Оставляет курсор-руку */
     font-size: 16px;
 }
 
 .calendar-link:hover {
     color: #5db06f;
-    /* Цвет не меняется */
 }
 
-.right-card {
+.edit-form-card {
     flex: 1;
 }
 
@@ -104,7 +118,7 @@
 
 .subtitle {
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: rgb(95, 95, 95);
     margin-bottom: 1rem;
 }
@@ -236,22 +250,7 @@
 
 
 
-.right-card {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* Центрирование по вертикали */
-}
 
-.send-form {
-    border-radius: 1rem;
-    border-style: solid;
-    border-width: 2px;
-    border-color: #7c57d9;
-    padding: 1rem;
-    /* Убираем margin, так как центрирование будет через flex */
-}
 
 
 
@@ -260,6 +259,11 @@
     .form-card {
         flex-direction: column;
         margin: 2rem;
+    }
+
+    .teamName p {
+        font-size: 1.5rem;
+        margin-bottom: 5rem;
     }
 
     .left-card {
@@ -273,20 +277,32 @@
         font-size: 0.8rem;
     }
 
+    .p1 {
+        font-size: 1rem !important;
+    }
+
+    .p2 {
+        font-size: 1rem !important;
+    }
+
+    .task-title {
+        font-size: 1.2rem !important;
+    }
+
     .title {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 
     .subtitle {
-        font-size: 0.6rem;
+        font-size: 1rem;
     }
 
     .field-input {
-        font-size: 0.7rem;
+        font-size: 0.9rem;
     }
 
     .custom-file-input {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
     }
 
     .form-card {
@@ -298,21 +314,31 @@
     }
 
     .form-action button {
-        font-size: 0.8rem;
+        font-size: 1rem;
         justify-content: center;
     }
 
     ::deep .custom-file-input::-webkit-file-upload-button {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 
     ::deep .custom-file-input {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 
     ::deep .field-input {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
+
+    .calendar-link {
+        font-size: 1rem;
+    }
+
+    .reference-information p {
+        font-size: 1rem;
+    }
+
+
 }
 
 
@@ -321,6 +347,11 @@
     .form-card {
         flex-direction: column;
         margin: 2rem;
+    }
+
+    .teamName p {
+        font-size: 1rem;
+        margin-bottom: 5rem;
     }
 
     .left-card {
@@ -334,12 +365,24 @@
         font-size: 0.8rem;
     }
 
+    .p1 {
+        font-size: 1rem !important;
+    }
+
+    .p2 {
+        font-size: 1rem !important;
+    }
+
+    .task-title {
+        font-size: 1rem !important;
+    }
+
     .title {
         font-size: 0.8rem;
     }
 
     .subtitle {
-        font-size: 0.6rem;
+        font-size: 0.8rem;
     }
 
     .field-input {
@@ -387,4 +430,14 @@
         font-size: 0.8rem;
         justify-content: center;
     }
+
+    .calendar-link {
+        font-size: 12px;
+    }
+
+    .reference-information p {
+        font-size: 12px;
+    }
+
+
 }

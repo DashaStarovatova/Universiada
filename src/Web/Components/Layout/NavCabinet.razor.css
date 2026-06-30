@@ -62,7 +62,7 @@
     }
 
     ::deep .nav-cab-link {
-        font-size: 0.7rem;
+        font-size: 0.9rem;
     }
 }
 
@@ -75,6 +75,6 @@
     }
 
     ::deep .nav-cab-link {
-        font-size: 0.6rem;
+        font-size: 0.7rem;
     }
 }

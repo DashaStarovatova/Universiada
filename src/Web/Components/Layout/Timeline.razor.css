@@ -83,8 +83,26 @@
     height: 6rem;
     text-align: center;
     margin-top: 20px;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     padding: 0rem 1rem;
+}
+
+.Mts-link {
+    text-decoration: underline;
+    /* Подчеркивание */
+    text-decoration-color: #7c57d9;
+    /* Цвет линии */
+    text-underline-offset: 2px;
+    /* Отступ линии от текста (опционально) */
+    text-decoration-thickness: 3px;
+    /* Толщина линии (опционально) */
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.Mts-link:hover {
+    color: #7c57d9;
+    ;
 }
 
 
@@ -113,10 +131,13 @@
 
     }
 
-
     .timeline-item p {
-        font-size: 0.9rem;
+        font-size: 1.1rem;
 
+    }
+
+    .Mts-link {
+        font-size: 1.1rem;
     }
 
     .timeline-date {
@@ -186,7 +207,6 @@
         height: 3rem;
         align-items: end;
         text-align: left;
-        font-size: 18px;
 
     }
 
@@ -201,6 +221,8 @@
         align-content: flex-start;
         text-align: left;
     }
+
+
 
     .timeline-content {
         padding-left: 1rem;
@@ -235,6 +257,26 @@
                 /* с 70% снова прозрачный */
             );
         border-radius: 3px;
+    }
+
+    .timeline-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+
+    .timeline-item h2 {
+        font-size: 1.9rem;
+
+    }
+
+    .timeline-item p {
+        font-size: 1.5rem;
+
+    }
+
+    .Mts-link {
+        font-size: 1.5rem;
     }
 
 }

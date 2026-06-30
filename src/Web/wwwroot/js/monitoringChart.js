@@ -53,13 +53,13 @@
         let legendFontSize, xFontSize, yFontSize, tooltipFontSize;
         const width = window.innerWidth;
         if (width < 480) {
-            legendFontSize = 8; xFontSize = 8; yFontSize = 8; tooltipFontSize = 10;
+            legendFontSize = 13; xFontSize = 13; yFontSize = 13; tooltipFontSize = 15;
         } else if (width < 768) {
-            legendFontSize = 8; xFontSize = 8; yFontSize = 8; tooltipFontSize = 10;
+            legendFontSize = 13; xFontSize = 13; yFontSize = 13; tooltipFontSize = 15;
         } else if (width < 1024) {
-            legendFontSize = 10; xFontSize = 10; yFontSize = 10; tooltipFontSize = 12;
+            legendFontSize = 13; xFontSize = 13; yFontSize = 13; tooltipFontSize = 15;
         } else if (width < 1280) {
-            legendFontSize = 10; xFontSize = 10; yFontSize = 10; tooltipFontSize = 12;
+            legendFontSize = 13; xFontSize = 13; yFontSize = 13; tooltipFontSize = 15;
         } else {
             legendFontSize = 15; xFontSize = 15; yFontSize = 15; tooltipFontSize = 17;
         }

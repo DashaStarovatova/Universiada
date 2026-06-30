@@ -19,7 +19,7 @@
 }
 
 .about-tag p {
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .about-dot {
@@ -82,7 +82,7 @@
     }
 
     .about-tag p {
-        font-size: 10px;
+        font-size: 14px;
     }
 
     .about-header {
@@ -123,6 +123,10 @@
 
         margin-top: 0rem;
         margin-bottom: 0rem;
+    }
+
+    .about-tag p {
+        font-size: 10px;
     }
 
 

@@ -48,12 +48,12 @@
 }
 
 .logo-cbr {
-    height: 30px;
+    height: 50px;
     width: auto;
 }
 
 .logo-msu {
-    height: 40px;
+    height: 70px;
     width: auto;
 }
 
@@ -101,6 +101,48 @@
     .contacts-header h2 {
         font-size: 2rem;
     }
+
+
+    .logo-cbr {
+        height: 40px;
+    }
+
+    .logo-msu {
+        height: 60px;
+    }
+
+    .contacts-footer {
+        margin-top: 2rem;
+        align-items: center;
+    }
+
+    .contacts-footer {
+        margin: 0 auto;
+        /* Центрирует сам блок по горизонтали */
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        width: fit-content;
+        /* Ширина по содержимому */
+    }
+
+
+    [contacts-left] {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .contacts-content {
+        display: flex;
+        gap: 0rem;
+        margin-left: auto;
+        align-items: flex-end;
+    }
+
+
 }
 
 
@@ -114,8 +156,33 @@
         margin-bottom: 0.8rem;
     }
 
-    .contacts-content{
+    .contacts-content {
         margin-bottom: 1rem;
+    }
+
+
+    .logo-cbr {
+        height: 30px;
+    }
+
+    .logo-msu {
+        height: 50px;
+    }
+
+    .contacts-footer {
+        margin-top: 1rem;
+    }
+
+    [contacts-left] {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .contacts-content {
+        display: flex;
+        gap: 0rem;
+        margin-left: 0;
+        align-items: flex-start;
     }
 
 }

@@ -44,43 +44,44 @@
 
             </div>
 
+            
+
             <EditForm class="right-card" Model="@Model" OnSubmit="@SendFormAnswer" FormName="sendForm">
+                <div class="right-card-wrapper">
+                    <div class="send-form">
+                        <p class="title">Отправить решение по ставке</p>
+                        <p class="subtitle">Введите ключевую ставку за @NextPeriod (в %)</p>
 
-                <div class="send-form">
-                    <p class="title">Отправить решение по ставке</p>
-                    <p class="subtitle">Введите ключевую ставку за @NextPeriod (в %)</p>
+                        <div class="form-field">
+                            <InputNumber type="text" class="field-input" placeholder="Например: 7.25"
+                                         @bind-Value="@Model.KeyRate" disabled="@IsDisabledKeyRate" />
+                        </div>
 
-                    <div class="form-field">
-                        <InputNumber type="text" class="field-input" placeholder="Например: 7.25"
-                                     @bind-Value="@Model.KeyRate" disabled="@IsDisabledKeyRate" />
+                        <span class="divider"></span>
+
+                        <p class="title">Загрузить обзор ДКП / Методологию</p>
+                        <p class="subtitle">Загрузка файлов доступна согласно календарю</p>
+
+                        <div class="form-field">
+                            <InputFile type="file" id="fileInput" class="custom-file-input" OnChange="HandleFileSelected"
+                                       accept=".pdf" disabled="@IsDisabledFile" />
+                        </div>
                     </div>
-
-                    <span class="divider"></span>
-
-                    <p class="title">Загрузить обзор ДКП / Методологию</p>
-                    <p class="subtitle">Загрузка файлов доступна согласно календарю</p>
-
-                    <div class="form-field">
-                        <InputFile type="file" id="fileInput" class="custom-file-input" OnChange="HandleFileSelected"
-                                   accept=".pdf" disabled="@IsDisabledFile" />
-                    </div>
-                </div>
 
         
-                <div class="form-action">
-                    <button type="button" @onclick="DownloadCsv" class="download-button">
-                        Скачать данные за @LastPeriod
-                        <span class="download-btn-dot"></span>
-                    </button>
+                    <div class="form-action">
+                        <button type="button" @onclick="DownloadCsv" class="download-button">
+                            Скачать данные за @LastPeriod
+                            <span class="download-btn-dot"></span>
+                        </button>
 
-                    <button type="submit" class="send-button">
-                        Отправить
-                        <span class="btn-dot"></span>
-                    </button>
+                        <button type="submit" class="send-button">
+                            Отправить
+                            <span class="btn-dot"></span>
+                        </button>
+                    </div>
                 </div>
-
             </EditForm>
-
         </div>
     </div>
 

@@ -86,16 +86,16 @@
     }
 
     .metric-label {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 
     .metric-value {
-        font-size: 2.0rem;
+        font-size: 2.5rem;
     }
 
 
     .chart-title {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
 
 }
@@ -125,16 +125,16 @@
     }
 
     .metric-label {
-        font-size: 0.7rem;
+        font-size: 1rem;
 
     }
 
     .metric-value {
-        font-size: 1.2rem;
+        font-size: 1.8rem;
 
     }
 
     .chart-title {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 }
