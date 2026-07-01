@@ -73,8 +73,8 @@
 /* настраиваем адаптивность */
 @media (max-width: 1439px) {
     .contacts-card {
-        margin-left: 2rem;
-        margin-right: 2rem;
+        margin-left: 6rem;
+        margin-right: 6rem;
         margin-top: 4rem;
         margin-bottom: 1rem;
     }
@@ -88,12 +88,26 @@
     }
 }
 
-
+@media (max-width: 1024px) {
+    .contacts-card {
+        margin-left: 2rem;
+        margin-right: 2rem;
+        margin-top: 4rem;
+        margin-bottom: 1rem;
+    }
+}
 
 
 
 
 @media (max-width: 768px) {
+    .contacts-card {
+        margin-left: 2rem;
+        margin-right: 2rem;
+        margin-top: 4rem;
+        margin-bottom: 1rem;
+    }
+
     .contacts-header h1 {
         font-size: 2rem;
     }

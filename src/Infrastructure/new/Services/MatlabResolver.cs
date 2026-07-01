@@ -7,6 +7,7 @@ using Domain;
 using Domain.Interfaces;
 using Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Services;
 
@@ -19,11 +20,13 @@ public class MatlabResolver : IAnswersResolver
     private readonly string _scriptName = "game1_oneDesicion";
     private readonly string _matlabExeFile = @"C:\Users\Darya\Desktop\Matlab new\bin\matlab.exe";
     private readonly string _workDirectory = @"C:\Users\Darya\Desktop\testUniversiada\";
+    private readonly ILogger<MatlabResolver> _logger;
 
-    public MatlabResolver(IServiceProvider serviceProvider)
+    public MatlabResolver(IServiceProvider serviceProvider, ILogger<MatlabResolver> logger)
     {
         provider = serviceProvider;
         _answers = new ConcurrentQueue<Answer>();
+         _logger = logger;
     }
 
     public void AddToQueue(Answer answer)
@@ -95,6 +98,7 @@ public class MatlabResolver : IAnswersResolver
             catch (Exception ex)
             {
                 Console.WriteLine($"MATLAB error for team {answer.TeamId}: {ex.Message}");
+                _logger.LogError(ex, "MATLAB error for team {TeamId}", answer.TeamId);
             }
         }
     }

@@ -283,6 +283,7 @@
             await JSRuntime.InvokeVoidAsync("alert", "Ваш ответ принят! Повторно отправить форму нельзя. Следующая отправка согласно календарю мероприятия.");
 
             Logger.LogInformation("Форма успешно отправлена");
+            Logger.LogInformation($"Ответы команды {KeycloakId}: {Model.KeyRate}");
 
             // Сброс формы после успешной отправки
             Model = new InputModel();

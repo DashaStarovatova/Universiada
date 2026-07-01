@@ -13,8 +13,19 @@ using Web.Components;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Authentication;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console() // Консоль
+    .WriteTo.File("logs/app-.txt", // Файл
+        rollingInterval: RollingInterval.Day, // Новый файл каждый день
+        retainedFileCountLimit: 30) // Хранить 30 дней
+    .CreateLogger();
+
+builder.Host.UseSerilog(); // Подключаем Serilog вместо стандартного логгера
 
 builder.Services.AddAuthentication(options =>
 {
@@ -40,10 +51,10 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("email");
     options.RequireHttpsMetadata = false;
     options.SignedOutRedirectUri = "/";
+    // options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidc";
+    // options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidc";
     options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidc";
-    options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidc";
-    options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidc";
-    options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidcJ";
+    // options.SignedOutCallbackPath = "/signout-callback-oidcsignout-callback-oidcJ";
     options.Events.OnRedirectToIdentityProviderForSignOut = context =>
     {
         // Достаем токен из свойств, которые мы положили в эндпоинте /logout
