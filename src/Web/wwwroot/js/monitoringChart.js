@@ -46,9 +46,8 @@
 
         const minDataValue = Math.min(...keyRates, ...inflations);
         const maxDataValue = Math.max(...keyRates, ...inflations);
-        let yMin = Math.floor(minDataValue - 2);
-        if (yMin < 0) yMin = 0;
-        const yMax = Math.ceil(maxDataValue + 2);
+        const yMin = Math.floor(minDataValue - 2) - (Math.floor(minDataValue - 2) % 2);
+        const yMax = Math.ceil(maxDataValue + 2) + (Math.ceil(maxDataValue + 2) % 2);
 
         let legendFontSize, xFontSize, yFontSize, tooltipFontSize;
         const width = window.innerWidth;

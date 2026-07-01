@@ -23,7 +23,7 @@ public class Answer
 
     public bool IsTodayAnswer()
     {
-        // return CreatedDate == DateTime.UtcNow.Date;
-        return false;
+        return CreatedDate == DateTime.UtcNow.Date;
+        //return false;
     }
 }

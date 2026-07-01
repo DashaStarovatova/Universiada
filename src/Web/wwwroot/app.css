@@ -17,11 +17,11 @@ body {
     background-attachment: fixed
 }
 
-header {
+/* header {
     position: sticky;
     top: 0;
     z-index: 9999;
-}
+} */
 
 h1 {
     text-transform: uppercase;
@@ -39,4 +39,20 @@ a {
     font-weight: 500;
     text-decoration: none;
     color: currentColor;
+}
+
+
+@media (min-width: 769px) {
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        position: static;
+        z-index: auto;
+    }
 }
