@@ -1,0 +1,79 @@
+.login-pf body {
+    /* background:
+        radial-gradient(ellipse at 15% 25%, #7c57d9 0%, transparent 65%),
+        radial-gradient(circle at 90% 60%, #81f381 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 95%, #8be9ba 0%, transparent 65%),
+        radial-gradient(circle at 80% 10%, #783baa 0%, transparent 50%) !important; */
+
+    font-size: 16px;
+}
+
+.card-pf {
+    background: white;
+    border-radius: 1rem;
+    color: black;
+}
+
+.login-pf-page {
+    height: 100vh !important;
+    justify-content: center;
+    align-items: center;
+    display: flex !important;
+    flex-direction: column;
+    padding: 0;
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+.login-pf body{
+    background-image: none !important;
+}
+
+.login-pf body{
+    background:
+        white !important;
+}
+
+.login-pf body{
+    background:
+        radial-gradient(ellipse at 15% 25%, #7c57d9 0%, transparent 65%),
+        radial-gradient(circle at 90% 60%, #81f381 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 95%, #8be9ba 0%, transparent 65%),
+        radial-gradient(circle at 80% 10%, #783baa 0%, transparent 50%) !important;
+}
+
+
+.pf-c-button.pf-m-primary {
+    background: #7c57d9 !important;
+    border-radius: 1rem;
+}
+
+.login-pf-page-header {
+    margin-bottom: 0px !important;
+}
+
+.login-pf-page-header {
+    display: none !important;
+}
+
+html {
+    margin: 0 !important;
+    background: white !important;
+    background-image: none !important;
+}
+
+.pf-c-form-control {
+    border: 2px solid rgb(128, 128, 128) !important;
+    border-radius: 1rem;
+
+}
+
+.pf-c-form-control:focus,
+.pf-c-form-control:focus-visible,
+input:focus {
+    border: 2px solid #5db06f !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+

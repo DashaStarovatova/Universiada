@@ -37,14 +37,16 @@ public class SendKeyRateCommandHandler
             return _results.TeamAnswersToday();
         }
 
-        var nullCount = 0; 
+        var nullCount = 0;
         if (command.IsNul is true)
         {
             nullCount = (lastAnswer?.NullCount ?? 0) + 1;
-        } else {
-            nullCount =  lastAnswer?.NullCount ?? 0;
         }
-        
+        else
+        {
+            nullCount = lastAnswer?.NullCount ?? 0;
+        }
+
         var answer = new Answer(
             command.TeamId,
             command.KeyRate,

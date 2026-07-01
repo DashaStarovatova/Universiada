@@ -5,6 +5,7 @@ using System.Text.Json;
 using Application.Services;
 using Domain;
 using Domain.Interfaces;
+using Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Services;
@@ -13,6 +14,7 @@ public class MatlabResolver : IAnswersResolver
 {
     private readonly IServiceProvider provider;
     private readonly ConcurrentQueue<Answer> _answers;
+    // private readonly IAnswersRepository _repository;
     private readonly string _historyFilePath = @"C:\Users\Darya\Desktop\testUniversiada\letsgo\";
     private readonly string _scriptName = "game1_oneDesicion";
     private readonly string _matlabExeFile = @"C:\Users\Darya\Desktop\Matlab new\bin\matlab.exe";
@@ -40,6 +42,7 @@ public class MatlabResolver : IAnswersResolver
 
             using var scope = provider.CreateScope();
             var repository = scope.ServiceProvider.GetRequiredService<IResultRepository>();
+            // var answerRepository = scope.ServiceProvider.GetRequiredService<IAnswersRepository>(); ////
 
             var historyPath = $"{_historyFilePath}{answer.TeamId}/{answer.TeamId}.mat";
 
@@ -72,6 +75,9 @@ public class MatlabResolver : IAnswersResolver
             {
                 continue;
             }
+
+            // await answerRepository.AddAsync(answer, cancellationToken);
+            // await answerRepository.SaveAsync(cancellationToken);
 
             var lastItem = results.Last();
             var result = new Result(

@@ -14,7 +14,7 @@ public class ResultsFacroty : IResultsFactory
     {
         return new FailResult()
         {
-            Description = "Комманда уже отвечала сегодня"
+            Description = "Команда уже отвечала сегодня"
         };
     }
 }

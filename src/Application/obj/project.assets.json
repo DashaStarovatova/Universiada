@@ -442,38 +442,32 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\p.zyryanov\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Darya\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\p.zyryanov\\repos\\Universiada\\src\\Application\\Application.csproj",
+      "projectUniqueName": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Application\\Application.csproj",
       "projectName": "Application",
-      "projectPath": "c:\\Users\\p.zyryanov\\repos\\Universiada\\src\\Application\\Application.csproj",
-      "packagesPath": "C:\\Users\\p.zyryanov\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\p.zyryanov\\repos\\Universiada\\src\\Application\\obj\\",
+      "projectPath": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Application\\Application.csproj",
+      "packagesPath": "C:\\Users\\Darya\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Application\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\p.zyryanov\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config"
+        "C:\\Users\\Darya\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "http://registry.arman-engineering.ru:4437/v3/index.json": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "c:\\Users\\p.zyryanov\\repos\\Universiada\\src\\Domain\\Domain.csproj": {
-              "projectPath": "c:\\Users\\p.zyryanov\\repos\\Universiada\\src\\Domain\\Domain.csproj"
+            "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\Darya\\Desktop\\Работа\\Универсиада\\Универсиада\\src\\Domain\\Domain.csproj"
             }
           }
         }
@@ -523,7 +517,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -800,13 +794,5 @@
         }
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source http://registry.arman-engineering.ru:4437/v3/index.json."
-    }
-  ]
+  }
 }
